@@ -14,7 +14,7 @@ variable "helm_chart_name" {
 
 variable "helm_chart_version" {
   type        = string
-  default     = "0.12.2"
+  default     = "0.15.1"
   description = "Version of the Helm chart"
 }
 
@@ -50,9 +50,9 @@ variable "settings" {
 }
 
 variable "values" {
-  type        = list(string)
-  default     = [""]
-  description = "Additional list of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options"
+  type        = string
+  default     = ""
+  description = "Additional values. Values will be merged, in order, as Helm does with multiple -f options"
 }
 
 # Cloudwatch & Vector cloudwatch sink configuration

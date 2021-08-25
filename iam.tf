@@ -28,9 +28,7 @@ data "aws_iam_policy_document" "cloudwatch" {
   statement {
     sid = "AllowDescribeCloudWatchLogsForVector"
 
-    actions = [
-      "logs:DescribeLogGroups",
-    ]
+    actions   = ["logs:DescribeLogGroups"]
     resources = ["*"]
   }
 
