@@ -83,4 +83,8 @@ module "vector_log_cloudwatch" {
 
 module "vector_log_default" {
   source = "../../"
+
+  cluster_name                     = module.eks_cluster.eks_cluster_id
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
 }
