@@ -52,7 +52,7 @@ variable "helm_create_namespace" {
 variable "k8s_namespace" {
   type        = string
   default     = "kube-system"
-  description = "The K8s namespace in which the external-dns will be installed"
+  description = "The K8s namespace in which the vector agent will be installed"
 }
 
 variable "settings" {
