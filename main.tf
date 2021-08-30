@@ -96,7 +96,7 @@ resource "helm_release" "self" {
   repository       = var.helm_repo_url
   chart            = var.helm_chart_name
   version          = var.helm_chart_version
-  create_namespace = var.k8s_create_namespace
+  create_namespace = var.helm_create_namespace
   namespace        = var.k8s_namespace
   name             = var.helm_release_name
 

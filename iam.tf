@@ -47,7 +47,6 @@ data "aws_iam_policy_document" "cloudwatch" {
   }
 }
 
-
 resource "aws_iam_policy" "cloudwatch" {
   count = var.enabled && var.cloudwatch_enabled ? 1 : 0
 

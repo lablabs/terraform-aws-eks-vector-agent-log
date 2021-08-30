@@ -1,11 +1,24 @@
-# vector-agent
 variable "enabled" {
   type        = bool
   default     = true
   description = "Variable indicating whether deployment is enabled"
 }
 
-# Helm
+variable "cluster_name" {
+  type        = string
+  description = "The name of the cluster"
+}
+
+variable "cluster_identity_oidc_issuer" {
+  type        = string
+  description = "The OIDC Identity issuer for the cluster"
+}
+
+variable "cluster_identity_oidc_issuer_arn" {
+  type        = string
+  description = "The OIDC Identity issuer ARN for the cluster that can be used to associate IAM roles with a service account"
+}
+
 variable "helm_chart_name" {
   type        = string
   default     = "vector-agent"
@@ -30,8 +43,7 @@ variable "helm_repo_url" {
   description = "Helm repository"
 }
 
-# K8s
-variable "k8s_create_namespace" {
+variable "helm_create_namespace" {
   type        = bool
   default     = true
   description = "Whether to create k8s namespace with name defined by `k8s_namespace`"
@@ -39,8 +51,8 @@ variable "k8s_create_namespace" {
 
 variable "k8s_namespace" {
   type        = string
-  default     = "logging"
-  description = "The K8s namespace in which the ingress-nginx has been created"
+  default     = "kube-system"
+  description = "The K8s namespace in which the external-dns will be installed"
 }
 
 variable "settings" {
@@ -108,23 +120,4 @@ variable "cloudwatch_role_name_prefix" {
   type        = string
   default     = "eks-irsa"
   description = "The role name prefix for vector cloudwatch ingest"
-}
-
-# IAM service account roles (IRSA)
-variable "cluster_name" {
-  type        = string
-  default     = ""
-  description = "The name of the cluster"
-}
-
-variable "cluster_identity_oidc_issuer" {
-  type        = string
-  default     = ""
-  description = "The OIDC Identity issuer for the cluster"
-}
-
-variable "cluster_identity_oidc_issuer_arn" {
-  type        = string
-  default     = ""
-  description = "The OIDC Identity issuer ARN for the cluster that can be used to associate IAM roles with a service account"
 }
