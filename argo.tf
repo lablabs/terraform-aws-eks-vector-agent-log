@@ -16,7 +16,7 @@ resource "kubernetes_manifest" "this" {
         "helm" = {
           "releaseName" = var.helm_release_name
           "parameters"  = [for k, v in var.settings : tomap({ "forceString" : true, "name" : k, "value" : v })]
-          "values"      = var.values
+          "values"      = data.utils_deep_merge_yaml.values[0].output
         }
       }
       "destination" = {
