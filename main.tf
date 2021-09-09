@@ -92,7 +92,7 @@ data "utils_deep_merge_yaml" "values" {
 data "aws_region" "current" {}
 
 resource "helm_release" "self" {
-  count            = var.enabled && !var.argocd_application ? 1 : 0
+  count            = var.enabled && !var.argo_application_enabled ? 1 : 0
   repository       = var.helm_repo_url
   chart            = var.helm_chart_name
   version          = var.helm_chart_version
