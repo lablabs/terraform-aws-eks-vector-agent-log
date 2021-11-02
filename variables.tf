@@ -55,6 +55,35 @@ variable "k8s_namespace" {
   description = "The K8s namespace in which the vector agent will be installed"
 }
 
+variable "k8s_rbac_create" {
+  type        = bool
+  default     = true
+  description = "Whether to create and use RBAC resources"
+}
+
+variable "k8s_service_account_create" {
+  type        = bool
+  default     = true
+  description = "Whether to create Service Account"
+}
+
+variable "k8s_irsa_role_create" {
+  type        = bool
+  default     = true
+  description = "Whether to create IRSA role and annotate service account"
+}
+
+variable "k8s_irsa_role_name_prefix" {
+  type        = string
+  default     = "eks-vector-irsa"
+  description = "The IRSA role name prefix for vector"
+}
+
+variable "k8s_assume_role_arn" {
+  default     = ""
+  description = "Whether to create and use default role or assume existing role. Useful for a variety of use cases, such as cross account access. Default (empty string) use default generted role."
+}
+
 variable "settings" {
   type        = map(any)
   default     = {}
@@ -116,12 +145,13 @@ variable "cloudwatch_nodes_tags" {
   description = "A map of tags to assign to the resource."
 }
 
-variable "cloudwatch_role_name_prefix" {
+variable "opensearch_endpoint" {
   type        = string
-  default     = "eks-irsa"
-  description = "The role name prefix for vector cloudwatch ingest"
+  default     = "https://opensearch.example.com"
+  description = "Domain-specific endpoint used to submit index and data upload requests"
 }
 
+# Argo settings
 variable "argo_namespace" {
   type        = string
   default     = "argo"
