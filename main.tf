@@ -1,7 +1,6 @@
 locals {
-  k8s_service_account_name = "${var.helm_chart_name}-${var.helm_release_name}"
-  k8s_service_account_role = try(aws_iam_role.cloudwatch[0].arn, "")
-
+  k8s_irsa_role_create             = var.enabled && var.k8s_rbac_create && var.k8s_service_account_create && var.k8s_irsa_role_create
+  k8s_service_account_name         = "${var.helm_chart_name}-${var.helm_release_name}"
   cloudwatch_group_name_containers = try(aws_cloudwatch_log_group.cloudwatch_containers[0].name, "")
   cloudwatch_group_name_nodes      = try(aws_cloudwatch_log_group.cloudwatch_nodes[0].name, "")
 
@@ -11,10 +10,14 @@ locals {
       "operator" : "Exists",
       "effect" : "NoSchedule"
     }],
+    "rbac" : {
+      "enabled" : var.k8s_rbac_create
+    },
     "serviceAccount" : {
-      "name" : local.k8s_service_account_name,
+      "create" : var.k8s_service_account_create
+      "name" : local.k8s_service_account_name
       "annotations" : {
-        "eks.amazonaws.com/role-arn" : local.k8s_service_account_role
+        "eks.amazonaws.com/role-arn" : local.k8s_irsa_role_create ? aws_iam_role.vector[0].arn : ""
       }
     },
     "extraVolumes" : [{
@@ -78,6 +81,24 @@ locals {
       }
     }
   })
+
+  values_sink_cloudwatch_assume_role = yamlencode({
+    "customConfig" : {
+      "sinks" : {
+        "elasticsearch_kubernetes_containers" : {
+          "auth" : {
+            "assume_role" : var.k8s_assume_role_arn
+          }
+        },
+        "elasticsearch_journal" : {
+          "auth" : {
+            "assume_role" : var.k8s_assume_role_arn
+          }
+        }
+      }
+    }
+  })
+
 }
 
 data "utils_deep_merge_yaml" "values" {
@@ -85,6 +106,7 @@ data "utils_deep_merge_yaml" "values" {
   input = compact([
     local.values_default,
     var.cloudwatch_enabled ? local.values_sink_cloudwatch : "",
+    var.cloudwatch_enabled && local.k8s_assume_role ? local.values_sink_cloudwatch_assume_role : "",
     var.values
   ])
 }
