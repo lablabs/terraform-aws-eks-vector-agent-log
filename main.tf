@@ -34,19 +34,10 @@ locals {
     }],
     "customConfig" : {
       "sources" : {
-        "kubelet" : {
-          "type" : "journald",
-          "include_units" : ["kubelet"]
-        },
-        "containerd" : {
-          "type" : "journald",
-          "include_units" : ["containerd"]
-        },
-        "docker" : {
-          "type" : "journald",
-          "include_units" : ["docker"]
-        },
-        "kubernetes_logs" : {
+        "journal" : {
+          "type" : "journald"
+        }
+        "kubernetes_containers" : {
           "type" : "kubernetes_logs"
         }
       }
@@ -56,9 +47,9 @@ locals {
   values_sink_cloudwatch = yamlencode({
     "customConfig" : {
       "sinks" : {
-        "cloudwatch_containers" : {
+        "cloudwatch_kubernetes_containers" : {
           "type" : "aws_cloudwatch_logs",
-          "inputs" : ["kubernetes_logs"],
+          "inputs" : ["kubernetes_containers"],
           "region" : data.aws_region.current.name,
           "group_name" : local.cloudwatch_group_name_containers,
           "stream_name" : "{{`{{ kubernetes.pod_namespace }}-{{ kubernetes.pod_name }}-{{ kubernetes.container_name }}`}}",
@@ -69,10 +60,10 @@ locals {
         },
         "cloudwatch_journal" : {
           "type" : "aws_cloudwatch_logs",
-          "inputs" : ["kubelet", "containerd", "docker"],
+          "inputs" : ["journal"],
           "region" : data.aws_region.current.name,
           "group_name" : local.cloudwatch_group_name_nodes,
-          "stream_name" : "{{`{{ host }}-{{ _SYSTEMD_UNIT }}`}}",
+          "stream_name" : "{{`{{ host }}`}}",
           "create_missing_group" : false,
           "encoding" : {
             "codec" : "json"
