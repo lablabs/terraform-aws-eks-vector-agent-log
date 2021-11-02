@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 resource "aws_iam_policy" "cloudwatch" {
   count = local.k8s_irsa_role_create && var.cloudwatch_enabled ? 1 : 0
 
-  name        = "${var.cluster_name}-${var.helm_chart_name}-cloudwatch"
+  name        = "${var.k8s_irsa_role_name_prefix}-${var.helm_chart_name}-cloudwatch"
   path        = "/"
   description = "Policy for vector logging cloudwatch sink"
   policy      = local.k8s_assume_role ? data.aws_iam_policy_document.cloudwatch_assume[0].json : data.aws_iam_policy_document.cloudwatch[0].json
@@ -95,7 +95,7 @@ data "aws_iam_policy_document" "opensearch_assume" {
 resource "aws_iam_policy" "opensearch" {
   count = local.k8s_irsa_role_create && var.opensearch_enabled ? 1 : 0
 
-  name        = "${var.cluster_name}-${var.helm_chart_name}-opensearch"
+  name        = "${var.k8s_irsa_role_name_prefix}-${var.helm_chart_name}-opensearch"
   path        = "/"
   description = "Policy for vector logging opensearch sink"
   policy      = local.k8s_assume_role ? data.aws_iam_policy_document.opensearch_assume[0].json : data.aws_iam_policy_document.opensearch[0].json
