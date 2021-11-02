@@ -145,6 +145,25 @@ variable "cloudwatch_nodes_tags" {
   description = "A map of tags to assign to the resource."
 }
 
+# Vector OpenSearch sink configuration
+variable "opensearch_enabled" {
+  type        = bool
+  default     = false
+  description = "Variable indicating whether default opensearch group with iam role is created and configured as vector sink"
+}
+
+variable "opensearch_domain_arn" {
+  type        = list(string)
+  default     = ["*"]
+  description = "List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains."
+}
+
+variable "opensearch_domain_action" {
+  type        = list(string)
+  default     = ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"]
+  description = "List of actions to allow for the vector role, _e.g._ `es:ESHttpGet`, `es:ESHttpPut`, `es:ESHttpPost`"
+}
+
 variable "opensearch_endpoint" {
   type        = string
   default     = "https://opensearch.example.com"

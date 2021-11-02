@@ -60,6 +60,54 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
   policy_arn = aws_iam_policy.cloudwatch[0].arn
 }
 
+data "aws_iam_policy_document" "opensearch" {
+  count = local.k8s_irsa_role_create && var.opensearch_enabled && !local.k8s_assume_role ? 1 : 0
+  statement {
+    sid = "AllowOpenSearchLogsForVector"
+
+    actions = [
+      "es:ESHttpGet",
+      "es:ESHttpPut",
+      "es:ESHttpPost"
+    ]
+
+    resources = var.opensearch_domain_arn
+  }
+}
+
+data "aws_iam_policy_document" "opensearch_assume" {
+  count = local.k8s_irsa_role_create && var.opensearch_enabled && local.k8s_assume_role ? 1 : 0
+  statement {
+    sid = "AllowAssumeOpenSearchRole"
+
+    effect = "Allow"
+
+    actions = [
+      "sts:AssumeRole"
+    ]
+
+    resources = [
+      var.k8s_assume_role_arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "opensearch" {
+  count = local.k8s_irsa_role_create && var.opensearch_enabled ? 1 : 0
+
+  name        = "${var.cluster_name}-${var.helm_chart_name}-opensearch"
+  path        = "/"
+  description = "Policy for vector logging opensearch sink"
+  policy      = local.k8s_assume_role ? data.aws_iam_policy_document.opensearch_assume[0].json : data.aws_iam_policy_document.opensearch[0].json
+}
+
+resource "aws_iam_role_policy_attachment" "opensearch" {
+  count = local.k8s_irsa_role_create && var.opensearch_enabled ? 1 : 0
+
+  role       = aws_iam_role.vector[0].name
+  policy_arn = aws_iam_policy.opensearch[0].arn
+}
+
 data "aws_iam_policy_document" "vector_irsa" {
   count = local.k8s_irsa_role_create ? 1 : 0
 
