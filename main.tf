@@ -90,6 +90,61 @@ locals {
     }
   })
 
+  values_sink_opensearch = yamlencode({
+    "customConfig" : {
+      "sinks" : {
+        "elasticsearch_kubernetes_containers" : {
+          "type" : "elasticsearch",
+          "inputs" : ["kubernetes_containers"],
+          "endpoint" : var.opensearch_endpoint,
+          "mode" : "data_stream",
+          "bulk_action" : "create",
+          "data_stream" : {
+            "type" : "logs",
+            "dataset" : "kubernetes",
+            "namespace" : "{{`{{ kubernetes.pod_namespace }}-{{kubernetes.pod_name}}`}}"
+          },
+          "compression" : "gzip",
+          "auth" : {
+            "strategy" : "aws",
+          }
+        },
+        "elasticsearch_journal" : {
+          "type" : "elasticsearch",
+          "inputs" : ["journal"],
+          "endpoint" : var.opensearch_endpoint,
+          "mode" : "data_stream",
+          "bulk_action" : "create",
+          "data_stream" : {
+            "type" : "logs",
+            "dataset" : "journal",
+            "namespace" : "{{`{{ host }}-{{ _SYSTEMD_UNIT }}`}}"
+          },
+          "compression" : "gzip",
+          "auth" : {
+            "strategy" : "aws",
+          }
+        }
+      }
+    }
+  })
+
+  values_sink_opensearch_assume_role = yamlencode({
+    "customConfig" : {
+      "sinks" : {
+        "elasticsearch_kubernetes_containers" : {
+          "auth" : {
+            "assume_role" : var.k8s_assume_role_arn
+          }
+        },
+        "elasticsearch_journal" : {
+          "auth" : {
+            "assume_role" : var.k8s_assume_role_arn
+          }
+        }
+      }
+    }
+  })
 }
 
 data "utils_deep_merge_yaml" "values" {
@@ -98,6 +153,8 @@ data "utils_deep_merge_yaml" "values" {
     local.values_default,
     var.cloudwatch_enabled ? local.values_sink_cloudwatch : "",
     var.cloudwatch_enabled && local.k8s_assume_role ? local.values_sink_cloudwatch_assume_role : "",
+    var.opensearch_enabled ? local.values_sink_opensearch : "",
+    var.opensearch_enabled && local.k8s_assume_role ? local.values_sink_opensearch_assume_role : "",
     var.values
   ])
 }
