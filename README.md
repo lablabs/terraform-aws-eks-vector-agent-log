@@ -45,7 +45,7 @@ To overcome this issue, the module deploys the ArgoCD application object using t
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 1.0 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.6.0 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.4.0 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 0.12.0 |
 
 ## Modules
