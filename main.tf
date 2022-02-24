@@ -102,7 +102,7 @@ locals {
           "data_stream" : {
             "type" : "logs",
             "dataset" : "kubernetes",
-            "namespace" : "{{`{{ kubernetes.pod_namespace }}-{{kubernetes.pod_name}}`}}"
+            "namespace" : "pods"
           },
           "compression" : "gzip",
           "auth" : {
@@ -118,7 +118,7 @@ locals {
           "data_stream" : {
             "type" : "logs",
             "dataset" : "journal",
-            "namespace" : "{{`{{ host }}-{{ _SYSTEMD_UNIT }}`}}"
+            "namespace" : "hosts"
           },
           "compression" : "gzip",
           "auth" : {
