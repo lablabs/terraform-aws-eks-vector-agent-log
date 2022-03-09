@@ -34,6 +34,9 @@ locals {
       "readOnly" : true
     }],
     "customConfig" : {
+      "api" : {
+        "enabled" : true
+      }
       "sources" : {
         "journal" : {
           "type" : "journald"
