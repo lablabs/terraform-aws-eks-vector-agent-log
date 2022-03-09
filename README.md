@@ -103,7 +103,7 @@ No modules.
 | <a name="input_helm_chart_version"></a> [helm\_chart\_version](#input\_helm\_chart\_version) | Version of the Helm chart | `string` | `"0.6.0"` | no |
 | <a name="input_helm_create_namespace"></a> [helm\_create\_namespace](#input\_helm\_create\_namespace) | Whether to create k8s namespace with name defined by `k8s_namespace` | `bool` | `true` | no |
 | <a name="input_helm_release_name"></a> [helm\_release\_name](#input\_helm\_release\_name) | Helm release name | `string` | `"vector-agent"` | no |
-| <a name="input_helm_repo_url"></a> [helm\_repo\_url](#input\_helm\_repo\_url) | Helm repository | `string` | `"https://packages.timber.io/helm/latest"` | no |
+| <a name="input_helm_repo_url"></a> [helm\_repo\_url](#input\_helm\_repo\_url) | Helm repository | `string` | `"https://helm.vector.dev"` | no |
 | <a name="input_k8s_assume_role_arn"></a> [k8s\_assume\_role\_arn](#input\_k8s\_assume\_role\_arn) | Whether to create and use default role or assume existing role. Useful for a variety of use cases, such as cross account access. Default (empty string) use default generted role. | `string` | `""` | no |
 | <a name="input_k8s_irsa_role_create"></a> [k8s\_irsa\_role\_create](#input\_k8s\_irsa\_role\_create) | Whether to create IRSA role and annotate service account | `bool` | `true` | no |
 | <a name="input_k8s_irsa_role_name_prefix"></a> [k8s\_irsa\_role\_name\_prefix](#input\_k8s\_irsa\_role\_name\_prefix) | The IRSA role name prefix for vector | `string` | `"eks-vector-irsa"` | no |

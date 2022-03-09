@@ -39,7 +39,7 @@ variable "helm_release_name" {
 
 variable "helm_repo_url" {
   type        = string
-  default     = "https://packages.timber.io/helm/latest"
+  default     = "https://helm.vector.dev"
   description = "Helm repository"
 }
 
