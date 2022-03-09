@@ -21,13 +21,13 @@ variable "cluster_identity_oidc_issuer_arn" {
 
 variable "helm_chart_name" {
   type        = string
-  default     = "vector-agent"
+  default     = "vector"
   description = "Helm chart name to be installed"
 }
 
 variable "helm_chart_version" {
   type        = string
-  default     = "0.15.1"
+  default     = "0.6.0"
   description = "Version of the Helm chart"
 }
 

@@ -5,7 +5,8 @@ locals {
   cloudwatch_group_name_nodes      = try(aws_cloudwatch_log_group.cloudwatch_nodes[0].name, "")
 
   values_default = yamlencode({
-    "podValuesChecksumAnnotation" : "true",
+    "role" : "Agent",
+    "rollWorkload" : "true",
     "tolerations" : [{
       "operator" : "Exists",
       "effect" : "NoSchedule"
