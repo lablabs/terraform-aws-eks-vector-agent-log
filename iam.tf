@@ -1,9 +1,9 @@
 locals {
-  k8s_assume_role = length(var.k8s_assume_role_arn) > 0 ? true : false
+  irsa_role_create = var.enabled && var.rbac_create && var.service_account_create && var.irsa_role_create
 }
 
 data "aws_iam_policy_document" "cloudwatch" {
-  count = local.k8s_irsa_role_create && var.cloudwatch_enabled ? 1 : 0
+  count = local.irsa_role_create && var.cloudwatch_enabled && !var.irsa_assume_role_enabled ? 1 : 0
 
   statement {
     sid = "AllowDescribeCloudWatchLogsForVector"
@@ -27,17 +27,8 @@ data "aws_iam_policy_document" "cloudwatch" {
   }
 }
 
-resource "aws_iam_policy" "cloudwatch" {
-  count = local.k8s_irsa_role_create && var.cloudwatch_enabled ? 1 : 0
-
-  name        = "${var.k8s_irsa_role_name_prefix}-${var.helm_chart_name}-cloudwatch"
-  path        = "/"
-  description = "Policy for vector logging cloudwatch sink"
-  policy      = local.k8s_assume_role ? data.aws_iam_policy_document.cloudwatch_assume[0].json : data.aws_iam_policy_document.cloudwatch[0].json
-}
-
 data "aws_iam_policy_document" "cloudwatch_assume" {
-  count = local.k8s_irsa_role_create && var.cloudwatch_enabled && local.k8s_assume_role ? 1 : 0
+  count = local.irsa_role_create && var.cloudwatch_enabled && var.irsa_assume_role_enabled ? 1 : 0
   statement {
     sid = "AllowAssumeCloudwatchRole"
 
@@ -48,20 +39,30 @@ data "aws_iam_policy_document" "cloudwatch_assume" {
     ]
 
     resources = [
-      var.k8s_assume_role_arn
+      var.irsa_assume_role_arn
     ]
   }
 }
 
-resource "aws_iam_role_policy_attachment" "cloudwatch" {
-  count = local.k8s_irsa_role_create && var.cloudwatch_enabled ? 1 : 0
+resource "aws_iam_policy" "cloudwatch" {
+  count = local.irsa_role_create && var.cloudwatch_enabled ? 1 : 0
 
-  role       = aws_iam_role.vector[0].name
+  name        = "${var.irsa_role_name_prefix}-${var.helm_chart_name}-cloudwatch"
+  path        = "/"
+  description = "Policy for vector logging cloudwatch sink"
+  policy      = var.irsa_assume_role_enabled ? data.aws_iam_policy_document.cloudwatch_assume[0].json : data.aws_iam_policy_document.cloudwatch[0].json
+  tags        = var.irsa_tags
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch" {
+  count = local.irsa_role_create && var.cloudwatch_enabled ? 1 : 0
+
+  role       = aws_iam_role.this[0].name
   policy_arn = aws_iam_policy.cloudwatch[0].arn
 }
 
 data "aws_iam_policy_document" "opensearch" {
-  count = local.k8s_irsa_role_create && var.opensearch_enabled && !local.k8s_assume_role ? 1 : 0
+  count = local.irsa_role_create && var.opensearch_enabled && !var.irsa_assume_role_enabled ? 1 : 0
   statement {
     sid = "AllowOpenSearchLogsForVector"
 
@@ -76,7 +77,7 @@ data "aws_iam_policy_document" "opensearch" {
 }
 
 data "aws_iam_policy_document" "opensearch_assume" {
-  count = local.k8s_irsa_role_create && var.opensearch_enabled && local.k8s_assume_role ? 1 : 0
+  count = local.irsa_role_create && var.opensearch_enabled && var.irsa_assume_role_enabled ? 1 : 0
   statement {
     sid = "AllowAssumeOpenSearchRole"
 
@@ -87,29 +88,30 @@ data "aws_iam_policy_document" "opensearch_assume" {
     ]
 
     resources = [
-      var.k8s_assume_role_arn
+      var.irsa_assume_role_arn
     ]
   }
 }
 
 resource "aws_iam_policy" "opensearch" {
-  count = local.k8s_irsa_role_create && var.opensearch_enabled ? 1 : 0
+  count = local.irsa_role_create && var.opensearch_enabled ? 1 : 0
 
-  name        = "${var.k8s_irsa_role_name_prefix}-${var.helm_chart_name}-opensearch"
+  name        = "${var.irsa_role_name_prefix}-${var.helm_chart_name}-opensearch"
   path        = "/"
   description = "Policy for vector logging opensearch sink"
-  policy      = local.k8s_assume_role ? data.aws_iam_policy_document.opensearch_assume[0].json : data.aws_iam_policy_document.opensearch[0].json
+  policy      = var.irsa_assume_role_enabled ? data.aws_iam_policy_document.opensearch_assume[0].json : data.aws_iam_policy_document.opensearch[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "opensearch" {
-  count = local.k8s_irsa_role_create && var.opensearch_enabled ? 1 : 0
+  count = local.irsa_role_create && var.opensearch_enabled ? 1 : 0
 
-  role       = aws_iam_role.vector[0].name
+  role       = aws_iam_role.this[0].name
   policy_arn = aws_iam_policy.opensearch[0].arn
 }
 
-data "aws_iam_policy_document" "vector_irsa" {
-  count = local.k8s_irsa_role_create ? 1 : 0
+#This policy document is used nowhere
+data "aws_iam_policy_document" "this_assume" {
+  count = local.irsa_role_create ? 1 : 0
 
   statement {
     actions = ["sts:AssumeRoleWithWebIdentity"]
@@ -124,7 +126,7 @@ data "aws_iam_policy_document" "vector_irsa" {
       variable = "${replace(var.cluster_identity_oidc_issuer, "https://", "")}:sub"
 
       values = [
-        "system:serviceaccount:${var.k8s_namespace}:${local.k8s_service_account_name}",
+        "system:serviceaccount:${var.namespace}:${var.service_account_name}",
       ]
     }
 
@@ -132,9 +134,10 @@ data "aws_iam_policy_document" "vector_irsa" {
   }
 }
 
-resource "aws_iam_role" "vector" {
-  count = local.k8s_irsa_role_create ? 1 : 0
+resource "aws_iam_role" "this" {
+  count = local.irsa_role_create ? 1 : 0
 
-  name               = "${var.k8s_irsa_role_name_prefix}-${var.helm_chart_name}"
-  assume_role_policy = data.aws_iam_policy_document.vector_irsa[0].json
+  name               = "${var.irsa_role_name_prefix}-${var.helm_chart_name}"
+  assume_role_policy = data.aws_iam_policy_document.this_assume[0].json
+  tags               = var.irsa_tags
 }
