@@ -73,7 +73,7 @@ module "vector_log_cloudwatch" {
     # "extraEnv[2].valueFrom.secretKeyRef.key" = "varname3-key"
   }
 
-  values = <<-EOF
+  helm_values = <<-EOF
     sources:
       foo:
         type = "journald"
