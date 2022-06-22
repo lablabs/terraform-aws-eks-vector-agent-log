@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.1.0
+    rev: v4.2.0
     hooks:
       - id: trailing-whitespace
       - id: check-merge-conflict
@@ -14,9 +14,8 @@ repos:
     hooks:
     - id: terraform_fmt
     - id: terraform_tflint
-#    - id: terraform_tfsec
-#    - id: terraform_validate
-#    - id: terraform_checkov
+    - id: terraform_validate
+    - id: terraform_checkov
     - id: terraform_docs
       args:
         - '--args=--hide providers --sort-by required'
