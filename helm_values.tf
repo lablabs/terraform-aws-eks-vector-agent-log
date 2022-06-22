@@ -5,6 +5,9 @@ locals {
   cloudwatch_group_name_nodes      = try(aws_cloudwatch_log_group.cloudwatch_nodes[0].name, "")
 
   helm_values_default = yamlencode({
+    "image" : {
+      "tag" : "0.22.2-debian"
+    }
     "role" : "Agent"
     "service" : {
       "enabled" : false
