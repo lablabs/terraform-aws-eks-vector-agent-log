@@ -224,7 +224,7 @@ variable "argo_helm_values" {
   description = "Value overrides to use when deploying argo application object with helm"
 }
 
-variable "argo_destionation_server" {
+variable "argo_destination_server" {
   type        = string
   default     = "https://kubernetes.default.svc"
   description = "Destination server for ArgoCD Application"
@@ -250,7 +250,11 @@ variable "argo_sync_policy" {
 }
 
 variable "argo_metadata" {
-  default     = {}
+  default = {
+    "finalizers" : [
+      "resources-finalizer.argocd.argoproj.io"
+    ]
+  }
   description = "ArgoCD Application metadata configuration. Override or create additional metadata parameters"
 }
 
