@@ -4,7 +4,7 @@ locals {
   cloudwatch_group_name_containers = try(aws_cloudwatch_log_group.cloudwatch_containers[0].name, "")
   cloudwatch_group_name_nodes      = try(aws_cloudwatch_log_group.cloudwatch_nodes[0].name, "")
 
-  helm_values_default = yamlencode({
+  values_default = yamlencode({
     "image" : {
       "tag" : "0.22.2-debian"
     }
@@ -174,14 +174,14 @@ locals {
   })
 }
 
-data "utils_deep_merge_yaml" "helm_values" {
+data "utils_deep_merge_yaml" "values" {
   count = var.enabled ? 1 : 0
   input = compact([
-    local.helm_values_default,
+    local.values_default,
     var.cloudwatch_enabled ? local.helm_values_sink_cloudwatch : "",
     var.cloudwatch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_cloudwatch_assume_role : "",
     var.opensearch_enabled ? local.helm_values_sink_opensearch : "",
     var.opensearch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_opensearch_assume_role : "",
-    var.helm_values
+    var.values
   ])
 }
