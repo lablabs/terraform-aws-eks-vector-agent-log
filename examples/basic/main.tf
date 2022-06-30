@@ -32,59 +32,103 @@ module "eks_node_group" {
   depends_on     = [module.eks_cluster.kubernetes_config_map_id]
 }
 
-module "vector_log_cloudwatch" {
+module "vector_log_cloudwatch_helm" {
   source = "../../"
+
+  enabled           = true
+  argo_enabled      = false
+  argo_helm_enabled = false
+
+  cluster_name                     = module.eks_cluster.eks_cluster_id
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+
+  namespace = "logging"
+
+  argo_sync_policy = {
+    "automated" : {}
+    "syncOptions" = ["CreateNamespace=true"]
+  }
 
   cloudwatch_enabled = true
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
-  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-
-  helm_set = {
-    # Examples:
-
-    ## controller:
-    ##   image:
-    ##     tag: "v0.41.2"
-    #
-    # "controller.image.tag" = "v0.41.2"
-
-    ## extraEnv:
-    ## - name: var1
-    ##   value: value1
-    ## - name: var2
-    ##   value: value2
-    #
-    ## "extraEnv[0].name"  = "var1"
-    ## "extraEnv[0].value" = "value1"
-    ## "extraEnv[1].name"  = "var2"
-    ## "extraEnv[1].value" = "value2"
-
-    ## extraEnv:
-    ## - name: var3
-    ##   valueFrom:
-    ##     secretKeyRef:
-    ##       name: existing-secret
-    ##       key: varname3-key
-
-    # "extraEnv[2].name" = "var3"
-    # "extraEnv[2].valueFrom.secretKeyRef.name" = "existing-secret"
-    # "extraEnv[2].valueFrom.secretKeyRef.key" = "varname3-key"
-  }
-
-  helm_values = <<-EOF
-    sources:
-      foo:
-        type = "journald"
-        include_units = ["foo.service"]
-  EOF
 }
 
-module "vector_log_default" {
+module "vector_log_cloudwatch_argo_manifests" {
   source = "../../"
+
+  enabled           = true
+  argo_enabled      = true
+  argo_helm_enabled = false
 
   cluster_name                     = module.eks_cluster.eks_cluster_id
   cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
   cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+
+  namespace = "logging"
+
+  argo_sync_policy = {
+    "automated" : {}
+    "syncOptions" = ["CreateNamespace=true"]
+  }
+
+  cloudwatch_enabled = true
+
+}
+
+module "vector_log_cloudwatch_argo_helm" {
+  source = "../../"
+
+  enabled           = true
+  argo_enabled      = true
+  argo_helm_enabled = true
+
+  cluster_name                     = module.eks_cluster.eks_cluster_id
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+
+  namespace = "logging"
+
+  argo_sync_policy = {
+    "automated" : {}
+    "syncOptions" = ["CreateNamespace=true"]
+  }
+
+  cloudwatch_enabled = true
+
+}
+
+module "vector_log_opensearch" {
+  source = "../../"
+
+  #-------------------------------------------
+  # Argo instal using Helm chart:
+  #   argo_enabled      = true
+  #   argo_helm_enabled = true
+  #-------------------------------------------
+  # Argo instal using K8S manifests:
+  #   argo_enabled      = true
+  #   argo_helm_enabled = false
+  #-------------------------------------------
+  # Helm Install without Argo:
+  #   argo_enabled      = false
+  #   argo_helm_enabled = false
+  enabled           = true
+  argo_enabled      = true
+  argo_helm_enabled = true
+
+  cluster_name                     = module.eks_cluster.eks_cluster_id
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+
+  namespace = "logging"
+
+  argo_sync_policy = {
+    "automated" : {}
+    "syncOptions" = ["CreateNamespace=true"]
+  }
+
+  opensearch_enabled  = true
+  opensearch_endpoint = "https://opensearch.organization.com"
+
 }
