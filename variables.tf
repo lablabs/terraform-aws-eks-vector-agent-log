@@ -80,7 +80,7 @@ variable "irsa_role_create" {
 
 variable "irsa_role_name_prefix" {
   type        = string
-  default     = "eks-irsa"
+  default     = "vector-agent-log-irsa"
   description = "The IRSA role name prefix for vector"
 }
 
@@ -93,12 +93,18 @@ variable "irsa_tags" {
 variable "irsa_assume_role_enabled" {
   type        = bool
   default     = false
-  description = "Whether IRSA is allowed to assume role defined by assume_role_arn. Useful for hosted zones in another AWS account."
+  description = "Whether IRSA is allowed to assume role defined by assume_role_arn."
 }
 
 variable "irsa_assume_role_arn" {
   default     = ""
   description = "Assume role arn. Assume role must be enabled."
+}
+
+variable "irsa_additional_policies" {
+  type        = map(string)
+  default     = {}
+  description = "Map of the additional policies to be attached to default role. Where key is arbitrary id and value is policy arn."
 }
 
 variable "settings" {

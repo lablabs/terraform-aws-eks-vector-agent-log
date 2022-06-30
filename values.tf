@@ -13,7 +13,7 @@ locals {
       "enabled" : false
     }
     "tolerations" : [{
-      "key" : "node-role.kubernetes.io/master",
+      "operator" : "Exists",
       "effect" : "NoSchedule"
     }],
     "rbac" : {
@@ -49,23 +49,6 @@ locals {
         }
         "kubernetes_containers" : {
           "type" : "kubernetes_logs"
-        }
-        "host_metrics" : {
-          "filesystem" : {
-            "devices" : {
-              "excludes" : ["binfmt_misc"]
-            }
-            "filesystems" : {
-              "excludes" : ["binfmt_misc"]
-            }
-            "mountPoints" : {
-              "excludes" : ["*/proc/sys/fs/binfmt_misc"]
-            }
-          }
-          "type" : "host_metrics"
-        }
-        "internal_metrics" : {
-          "type" : "internal_metrics"
         }
       }
     }
@@ -125,7 +108,9 @@ locals {
           "inputs" : ["kubernetes_containers"],
           "endpoint" : var.opensearch_endpoint,
           "mode" : "data_stream",
-          "bulk_action" : "create",
+          "bulk" : {
+            "action" : "create"
+          },
           "data_stream" : {
             "type" : "logs",
             "dataset" : "kubernetes",
@@ -134,6 +119,9 @@ locals {
           "compression" : "gzip",
           "auth" : {
             "strategy" : "aws",
+          },
+          "aws" : {
+            "region" : data.aws_region.current.name
           }
         },
         "elasticsearch_journal" : {
@@ -141,7 +129,9 @@ locals {
           "inputs" : ["journal"],
           "endpoint" : var.opensearch_endpoint,
           "mode" : "data_stream",
-          "bulk_action" : "create",
+          "bulk" : {
+            "action" : "create"
+          },
           "data_stream" : {
             "type" : "logs",
             "dataset" : "journal",
@@ -150,6 +140,9 @@ locals {
           "compression" : "gzip",
           "auth" : {
             "strategy" : "aws",
+          },
+          "aws" : {
+            "region" : data.aws_region.current.name
           }
         }
       }

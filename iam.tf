@@ -141,3 +141,10 @@ resource "aws_iam_role" "this" {
   assume_role_policy = data.aws_iam_policy_document.this_irsa[0].json
   tags               = var.irsa_tags
 }
+
+resource "aws_iam_role_policy_attachment" "this_additional" {
+  for_each = local.irsa_role_create ? var.irsa_additional_policies : {}
+
+  role       = aws_iam_role.this[0].name
+  policy_arn = each.value
+}
