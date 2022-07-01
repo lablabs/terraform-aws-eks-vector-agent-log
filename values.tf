@@ -1,23 +1,29 @@
+data "aws_region" "current" {}
+
 locals {
-  k8s_irsa_role_create             = var.enabled && var.k8s_rbac_create && var.k8s_service_account_create && var.k8s_irsa_role_create
-  k8s_service_account_name         = "${var.helm_chart_name}-${var.helm_release_name}"
   cloudwatch_group_name_containers = try(aws_cloudwatch_log_group.cloudwatch_containers[0].name, "")
   cloudwatch_group_name_nodes      = try(aws_cloudwatch_log_group.cloudwatch_nodes[0].name, "")
 
   values_default = yamlencode({
-    "podValuesChecksumAnnotation" : "true",
+    "image" : {
+      "tag" : "0.22.2-debian"
+    }
+    "role" : "Agent"
+    "service" : {
+      "enabled" : false
+    }
     "tolerations" : [{
       "operator" : "Exists",
       "effect" : "NoSchedule"
     }],
     "rbac" : {
-      "enabled" : var.k8s_rbac_create
+      "create" : var.rbac_create
     },
     "serviceAccount" : {
-      "create" : var.k8s_service_account_create
-      "name" : local.k8s_service_account_name
+      "create" : var.service_account_create
+      "name" : var.service_account_name
       "annotations" : {
-        "eks.amazonaws.com/role-arn" : local.k8s_irsa_role_create ? aws_iam_role.vector[0].arn : ""
+        "eks.amazonaws.com/role-arn" : local.irsa_role_create ? aws_iam_role.this[0].arn : ""
       }
     },
     "extraVolumes" : [{
@@ -33,6 +39,10 @@ locals {
       "readOnly" : true
     }],
     "customConfig" : {
+      "data_dir" : "/vector-data-dir"
+      "api" : {
+        "enabled" : false
+      }
       "sources" : {
         "journal" : {
           "type" : "journald"
@@ -44,7 +54,7 @@ locals {
     }
   })
 
-  values_sink_cloudwatch = yamlencode({
+  helm_values_sink_cloudwatch = yamlencode({
     "customConfig" : {
       "sinks" : {
         "cloudwatch_kubernetes_containers" : {
@@ -73,24 +83,24 @@ locals {
     }
   })
 
-  values_sink_cloudwatch_assume_role = yamlencode({
+  helm_values_sink_cloudwatch_assume_role = yamlencode({
     "customConfig" : {
       "sinks" : {
         "elasticsearch_kubernetes_containers" : {
           "auth" : {
-            "assume_role" : var.k8s_assume_role_arn
+            "assume_role" : var.irsa_assume_role_arn
           }
         },
         "elasticsearch_journal" : {
           "auth" : {
-            "assume_role" : var.k8s_assume_role_arn
+            "assume_role" : var.irsa_assume_role_arn
           }
         }
       }
     }
   })
 
-  values_sink_opensearch = yamlencode({
+  helm_values_sink_opensearch = yamlencode({
     "customConfig" : {
       "sinks" : {
         "elasticsearch_kubernetes_containers" : {
@@ -98,7 +108,9 @@ locals {
           "inputs" : ["kubernetes_containers"],
           "endpoint" : var.opensearch_endpoint,
           "mode" : "data_stream",
-          "bulk_action" : "create",
+          "bulk" : {
+            "action" : "create"
+          },
           "data_stream" : {
             "type" : "logs",
             "dataset" : "kubernetes",
@@ -107,6 +119,9 @@ locals {
           "compression" : "gzip",
           "auth" : {
             "strategy" : "aws",
+          },
+          "aws" : {
+            "region" : data.aws_region.current.name
           }
         },
         "elasticsearch_journal" : {
@@ -114,7 +129,9 @@ locals {
           "inputs" : ["journal"],
           "endpoint" : var.opensearch_endpoint,
           "mode" : "data_stream",
-          "bulk_action" : "create",
+          "bulk" : {
+            "action" : "create"
+          },
           "data_stream" : {
             "type" : "logs",
             "dataset" : "journal",
@@ -123,23 +140,26 @@ locals {
           "compression" : "gzip",
           "auth" : {
             "strategy" : "aws",
+          },
+          "aws" : {
+            "region" : data.aws_region.current.name
           }
         }
       }
     }
   })
 
-  values_sink_opensearch_assume_role = yamlencode({
+  helm_values_sink_opensearch_assume_role = yamlencode({
     "customConfig" : {
       "sinks" : {
         "elasticsearch_kubernetes_containers" : {
           "auth" : {
-            "assume_role" : var.k8s_assume_role_arn
+            "assume_role" : var.irsa_assume_role_arn
           }
         },
         "elasticsearch_journal" : {
           "auth" : {
-            "assume_role" : var.k8s_assume_role_arn
+            "assume_role" : var.irsa_assume_role_arn
           }
         }
       }
@@ -151,34 +171,10 @@ data "utils_deep_merge_yaml" "values" {
   count = var.enabled ? 1 : 0
   input = compact([
     local.values_default,
-    var.cloudwatch_enabled ? local.values_sink_cloudwatch : "",
-    var.cloudwatch_enabled && local.k8s_assume_role ? local.values_sink_cloudwatch_assume_role : "",
-    var.opensearch_enabled ? local.values_sink_opensearch : "",
-    var.opensearch_enabled && local.k8s_assume_role ? local.values_sink_opensearch_assume_role : "",
+    var.cloudwatch_enabled ? local.helm_values_sink_cloudwatch : "",
+    var.cloudwatch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_cloudwatch_assume_role : "",
+    var.opensearch_enabled ? local.helm_values_sink_opensearch : "",
+    var.opensearch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_opensearch_assume_role : "",
     var.values
   ])
-}
-
-data "aws_region" "current" {}
-
-resource "helm_release" "self" {
-  count            = var.enabled && !var.argo_application_enabled ? 1 : 0
-  repository       = var.helm_repo_url
-  chart            = var.helm_chart_name
-  version          = var.helm_chart_version
-  create_namespace = var.helm_create_namespace
-  namespace        = var.k8s_namespace
-  name             = var.helm_release_name
-
-  values = [
-    data.utils_deep_merge_yaml.values[0].output
-  ]
-
-  dynamic "set" {
-    for_each = var.settings
-    content {
-      name  = set.key
-      value = set.value
-    }
-  }
 }
