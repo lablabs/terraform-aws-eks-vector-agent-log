@@ -152,10 +152,13 @@ No modules.
 | <a name="input_irsa_role_create"></a> [irsa\_role\_create](#input\_irsa\_role\_create) | Whether to create IRSA role and annotate service account | `bool` | `true` | no |
 | <a name="input_irsa_role_name_prefix"></a> [irsa\_role\_name\_prefix](#input\_irsa\_role\_name\_prefix) | The IRSA role name prefix for vector | `string` | `"vector-agent-log-irsa"` | no |
 | <a name="input_irsa_tags"></a> [irsa\_tags](#input\_irsa\_tags) | IRSA resources tags | `map(string)` | `{}` | no |
+| <a name="input_loki_enabled"></a> [loki\_enabled](#input\_loki\_enabled) | Variable indicating whether Loki is configured as Vector sink | `bool` | `false` | no |
+| <a name="input_loki_endpoint"></a> [loki\_endpoint](#input\_loki\_endpoint) | Domain-specific endpoint used to submit index and data upload requests | `string` | `"https://loki.example.com"` | no |
+| <a name="input_loki_label_cluster"></a> [loki\_label\_cluster](#input\_loki\_label\_cluster) | Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events | `string` | `"example-cluster"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The K8s namespace in which the vector agent will be installed | `string` | `"kube-system"` | no |
 | <a name="input_opensearch_domain_action"></a> [opensearch\_domain\_action](#input\_opensearch\_domain\_action) | List of actions to allow for the vector role, _e.g._ `es:ESHttpGet`, `es:ESHttpPut`, `es:ESHttpPost` | `list(string)` | <pre>[<br>  "es:ESHttpGet",<br>  "es:ESHttpPut",<br>  "es:ESHttpPost"<br>]</pre> | no |
 | <a name="input_opensearch_domain_arn"></a> [opensearch\_domain\_arn](#input\_opensearch\_domain\_arn) | List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains. | `list(string)` | <pre>[<br>  "*"<br>]</pre> | no |
-| <a name="input_opensearch_enabled"></a> [opensearch\_enabled](#input\_opensearch\_enabled) | Variable indicating whether default opensearch group with iam role is created and configured as vector sink | `bool` | `false` | no |
+| <a name="input_opensearch_enabled"></a> [opensearch\_enabled](#input\_opensearch\_enabled) | Variable indicating whether default Opensearch group with iam role is created and configured as Vector sink | `bool` | `false` | no |
 | <a name="input_opensearch_endpoint"></a> [opensearch\_endpoint](#input\_opensearch\_endpoint) | Domain-specific endpoint used to submit index and data upload requests | `string` | `"https://opensearch.example.com"` | no |
 | <a name="input_rbac_create"></a> [rbac\_create](#input\_rbac\_create) | Whether to create and use RBAC resources | `bool` | `true` | no |
 | <a name="input_service_account_create"></a> [service\_account\_create](#input\_service\_account\_create) | Whether to create Service Account | `bool` | `true` | no |

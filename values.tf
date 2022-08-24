@@ -165,6 +165,39 @@ locals {
       }
     }
   })
+
+  helm_values_sink_loki = yamlencode({
+    "customConfig" : {
+      "sinks" : {
+        "loki_kubernetes_containers" : {
+          "type" : "loki"
+          "inputs" : ["kubernetes_containers"]
+          "endpoint" : var.loki_endpoint
+          "labels" : {
+            "forwarder" : "vector"
+            "cluster" : var.loki_label_cluster
+            "log_source" : "containers"
+          }
+          "encoding" : {
+            "codec" : "json"
+          }
+        }
+        "loki_kubernetes_nodes" : {
+          "type" : "loki"
+          "inputs" : ["journal"]
+          "endpoint" : var.loki_endpoint
+          "labels" : {
+            "forwarder" : "vector"
+            "cluster" : var.loki_label_cluster
+            "log_source" : "nodes"
+          }
+          "encoding" : {
+            "codec" : "json"
+          }
+        }
+      }
+    }
+  })
 }
 
 data "utils_deep_merge_yaml" "values" {
@@ -175,6 +208,7 @@ data "utils_deep_merge_yaml" "values" {
     var.cloudwatch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_cloudwatch_assume_role : "",
     var.opensearch_enabled ? local.helm_values_sink_opensearch : "",
     var.opensearch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_opensearch_assume_role : "",
+    var.loki_enabled ? local.helm_values_sink_loki : "",
     var.values
   ])
 }

@@ -184,7 +184,7 @@ variable "cloudwatch_nodes_tags" {
 variable "opensearch_enabled" {
   type        = bool
   default     = false
-  description = "Variable indicating whether default opensearch group with iam role is created and configured as vector sink"
+  description = "Variable indicating whether default Opensearch group with iam role is created and configured as Vector sink"
 }
 
 variable "opensearch_domain_arn" {
@@ -203,6 +203,25 @@ variable "opensearch_endpoint" {
   type        = string
   default     = "https://opensearch.example.com"
   description = "Domain-specific endpoint used to submit index and data upload requests"
+}
+
+# Vector Loki sink configuration
+variable "loki_enabled" {
+  type        = bool
+  default     = false
+  description = "Variable indicating whether Loki is configured as Vector sink"
+}
+
+variable "loki_endpoint" {
+  type        = string
+  default     = "https://loki.example.com"
+  description = "Domain-specific endpoint used to submit index and data upload requests"
+}
+
+variable "loki_label_cluster" {
+  type        = string
+  default     = "example-cluster"
+  description = "Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events"
 }
 
 # Argo settings
