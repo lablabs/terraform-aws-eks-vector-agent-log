@@ -221,7 +221,7 @@ variable "loki_endpoint" {
 variable "loki_label_cluster" {
   type        = string
   default     = "example-cluster"
-  description = "Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events."
+  description = "Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events"
 }
 
 # Argo settings
