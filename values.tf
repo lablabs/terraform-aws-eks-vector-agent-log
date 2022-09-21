@@ -117,9 +117,6 @@ locals {
             "namespace" : "pods"
           },
           "compression" : "gzip",
-          "auth" : {
-            "strategy" : "aws",
-          },
           "aws" : {
             "region" : data.aws_region.current.name
           }
@@ -138,9 +135,6 @@ locals {
             "namespace" : "hosts"
           },
           "compression" : "gzip",
-          "auth" : {
-            "strategy" : "aws",
-          },
           "aws" : {
             "region" : data.aws_region.current.name
           }
@@ -160,6 +154,23 @@ locals {
         "elasticsearch_journal" : {
           "auth" : {
             "assume_role" : var.irsa_assume_role_arn
+          }
+        }
+      }
+    }
+  })
+
+  helm_values_sink_opensearch_auth_strategy = yamlencode({
+    "customConfig" : {
+      "sinks" : {
+        "elasticsearch_kubernetes_containers" : {
+          "auth" : {
+            "strategy" : "aws",
+          }
+        },
+        "elasticsearch_journal" : {
+          "auth" : {
+            "strategy" : "aws",
           }
         }
       }
@@ -207,6 +218,7 @@ data "utils_deep_merge_yaml" "values" {
     var.cloudwatch_enabled ? local.helm_values_sink_cloudwatch : "",
     var.cloudwatch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_cloudwatch_assume_role : "",
     var.opensearch_enabled ? local.helm_values_sink_opensearch : "",
+    var.opensearch_enabled && var.irsa_role_create ? local.helm_values_sink_opensearch_auth_strategy : "",
     var.opensearch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_opensearch_assume_role : "",
     var.loki_enabled ? local.helm_values_sink_loki : "",
     var.values
