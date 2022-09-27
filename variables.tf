@@ -4,11 +4,6 @@ variable "enabled" {
   description = "Variable indicating whether deployment is enabled"
 }
 
-variable "cluster_name" {
-  type        = string
-  description = "The name of the cluster"
-}
-
 variable "cluster_identity_oidc_issuer" {
   type        = string
   description = "The OIDC Identity issuer for the cluster"
@@ -68,6 +63,7 @@ variable "service_account_create" {
 }
 
 variable "service_account_name" {
+  type        = string
   default     = "aws-vector-agent-log"
   description = "The k8s aws-vector-agent-log service account name"
 }
@@ -97,6 +93,7 @@ variable "irsa_assume_role_enabled" {
 }
 
 variable "irsa_assume_role_arn" {
+  type        = string
   default     = ""
   description = "Assume role arn. Assume role must be enabled."
 }
@@ -193,12 +190,6 @@ variable "opensearch_domain_arn" {
   description = "List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains."
 }
 
-variable "opensearch_domain_action" {
-  type        = list(string)
-  default     = ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"]
-  description = "List of actions to allow for the vector role, _e.g._ `es:ESHttpGet`, `es:ESHttpPut`, `es:ESHttpPost`"
-}
-
 variable "opensearch_endpoint" {
   type        = string
   default     = "https://opensearch.example.com"
@@ -262,6 +253,10 @@ variable "argo_project" {
 }
 
 variable "argo_info" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
   default = [{
     "name"  = "terraform"
     "value" = "true"
@@ -270,11 +265,13 @@ variable "argo_info" {
 }
 
 variable "argo_sync_policy" {
+  type        = any
   description = "ArgoCD syncPolicy manifest parameter"
   default     = {}
 }
 
 variable "argo_metadata" {
+  type = any
   default = {
     "finalizers" : [
       "resources-finalizer.argocd.argoproj.io"
@@ -284,11 +281,13 @@ variable "argo_metadata" {
 }
 
 variable "argo_apiversion" {
+  type        = string
   default     = "argoproj.io/v1alpha1"
   description = "ArgoCD Appliction apiVersion"
 }
 
 variable "argo_spec" {
+  type        = any
   default     = {}
   description = "ArgoCD Application spec configuration. Override or create additional spec parameters"
 }
@@ -300,6 +299,7 @@ variable "argo_kubernetes_manifest_computed_fields" {
 }
 
 variable "argo_kubernetes_manifest_field_manager_name" {
+  type        = string
   default     = "Terraform"
   description = "The name of the field manager to use when applying the kubernetes manifest resource. Defaults to Terraform"
 }
