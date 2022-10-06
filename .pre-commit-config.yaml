@@ -20,13 +20,8 @@ repos:
       args:
         - '--args=--config=.terraform-docs.yml'
 
-  - repo: https://github.com/pecigonzalo/pre-commit-terraform-vars
-    rev: v1.0.0
-    hooks:
-    - id: terraform-vars
-
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.2.0
+    rev: v1.3.0
     hooks:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
