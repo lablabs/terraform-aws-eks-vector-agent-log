@@ -39,11 +39,11 @@ module "vector_log_cloudwatch_helm" {
   argo_enabled      = false
   argo_helm_enabled = false
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
-  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-
-  namespace = "logging"
+  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  namespace                              = "logging"
 
   argo_sync_policy = {
     "automated" : {}
@@ -61,11 +61,11 @@ module "vector_log_cloudwatch_argo_manifests" {
   argo_enabled      = true
   argo_helm_enabled = false
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
-  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-
-  namespace = "logging"
+  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  namespace                              = "logging"
 
   argo_sync_policy = {
     "automated" : {}
@@ -83,11 +83,11 @@ module "vector_log_cloudwatch_argo_helm" {
   argo_enabled      = true
   argo_helm_enabled = true
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
-  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-
-  namespace = "logging"
+  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  namespace                              = "logging"
 
   argo_sync_policy = {
     "automated" : {}
@@ -117,11 +117,11 @@ module "vector_log_opensearch" {
   argo_enabled      = true
   argo_helm_enabled = true
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
   cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
   cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+  namespace                        = "logging"
 
-  namespace = "logging"
+  opensearch_domain_arn = ["arn:aws:es:eu-central-1:123456789012:domain/opensearch-cluster-arn"]
 
   argo_sync_policy = {
     "automated" : {}
@@ -152,7 +152,6 @@ module "vector_log_loki" {
   argo_enabled      = true
   argo_helm_enabled = true
 
-  cluster_name                     = module.eks_cluster.eks_cluster_id
   cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
   cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
 
