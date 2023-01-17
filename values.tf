@@ -185,9 +185,14 @@ locals {
           "inputs" : ["kubernetes_containers"]
           "endpoint" : var.loki_endpoint
           "labels" : {
-            "forwarder" : "vector"
+            "app" : "{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/name\" }}`}}"
             "cluster" : var.loki_label_cluster
+            "container" : "{{`{{ kubernetes.container_name }}`}}"
+            "forwarder" : "vector"
+            "host" : "{{`{{ kubernetes.pod_node_name }}`}}"
             "log_source" : "containers"
+            "namespace" : "{{`{{ kubernetes.pod_namespace }}`}}"
+            "pod" : "{{`{{ kubernetes.pod_name }}`}}"
           }
           "encoding" : {
             "codec" : "json"
