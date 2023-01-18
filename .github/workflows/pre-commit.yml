@@ -12,6 +12,8 @@ env:
   TFLINT_VERSION: "v0.40.1"
   CHECKOV_VERSION: "2.2.125"
 
+permissions: read-all
+
 jobs:
   pre-commit:
     runs-on: ubuntu-22.04
