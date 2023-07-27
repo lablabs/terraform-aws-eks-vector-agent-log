@@ -24,7 +24,7 @@ The code in this example shows how to use the module with basic configuration an
 | <a name="module_vector_log_cloudwatch_helm"></a> [vector\_log\_cloudwatch\_helm](#module\_vector\_log\_cloudwatch\_helm) | ../../ | n/a |
 | <a name="module_vector_log_loki"></a> [vector\_log\_loki](#module\_vector\_log\_loki) | ../../ | n/a |
 | <a name="module_vector_log_opensearch"></a> [vector\_log\_opensearch](#module\_vector\_log\_opensearch) | ../../ | n/a |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | 3.6.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | 4.0.0 |
 
 ## Resources
 
