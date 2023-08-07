@@ -6,7 +6,7 @@ locals {
 
   values_default = yamlencode({
     "image" : {
-      "tag" : "0.22.2-debian"
+      "tag" : "0.31.0-debian"
     }
     "role" : "Agent"
     "service" : {
