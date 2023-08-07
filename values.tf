@@ -106,7 +106,7 @@ locals {
         "elasticsearch_kubernetes_containers" : {
           "type" : "elasticsearch",
           "inputs" : ["kubernetes_containers"],
-          "endpoint" : var.opensearch_endpoint,
+          "endpoints" : [var.opensearch_endpoint],
           "mode" : "data_stream",
           "bulk" : {
             "action" : "create"
@@ -124,7 +124,7 @@ locals {
         "elasticsearch_journal" : {
           "type" : "elasticsearch",
           "inputs" : ["journal"],
-          "endpoint" : var.opensearch_endpoint,
+          "endpoints" : [var.opensearch_endpoint],
           "mode" : "data_stream",
           "bulk" : {
             "action" : "create"
