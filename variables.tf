@@ -14,6 +14,8 @@ variable "cluster_identity_oidc_issuer_arn" {
   description = "The OIDC Identity issuer ARN for the cluster that can be used to associate IAM roles with a service account"
 }
 
+# ================ common variables (required) ================
+
 variable "helm_chart_name" {
   type        = string
   default     = "vector"
@@ -41,7 +43,7 @@ variable "helm_repo_url" {
 variable "helm_create_namespace" {
   type        = bool
   default     = true
-  description = "Whether to create k8s namespace with name defined by `namespace`"
+  description = "Create the namespace if it does not yet exist"
 }
 
 variable "namespace" {
@@ -49,6 +51,20 @@ variable "namespace" {
   default     = "kube-system"
   description = "The K8s namespace in which the vector agent will be installed"
 }
+
+variable "settings" {
+  type        = map(any)
+  default     = {}
+  description = "Additional helm sets which will be passed to the Helm chart values, see https://artifacthub.io/packages/helm/vector/vector-agent"
+}
+
+variable "values" {
+  type        = string
+  default     = ""
+  description = "Additional yaml encoded values which will be passed to the Helm chart"
+}
+
+# ================ IRSA variables ================
 
 variable "rbac_create" {
   type        = bool
@@ -74,18 +90,6 @@ variable "irsa_role_create" {
   description = "Whether to create IRSA role and annotate service account"
 }
 
-variable "irsa_role_name_prefix" {
-  type        = string
-  default     = "vector-agent-log-irsa"
-  description = "The IRSA role name prefix for vector"
-}
-
-variable "irsa_tags" {
-  type        = map(string)
-  default     = {}
-  description = "IRSA resources tags"
-}
-
 variable "irsa_assume_role_enabled" {
   type        = bool
   default     = false
@@ -104,31 +108,20 @@ variable "irsa_additional_policies" {
   description = "Map of the additional policies to be attached to default role. Where key is arbitrary id and value is policy arn."
 }
 
-variable "settings" {
-  type        = map(any)
-  default     = {}
-  description = "Additional helm sets which will be passed to the Helm chart values, see https://artifacthub.io/packages/helm/vector/vector-agent"
-}
-
-variable "helm_set_sensitive" {
-  type        = map(any)
-  default     = {}
-  description = "Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff"
-}
-
-variable "helm_postrender" {
-  type        = map(any)
-  default     = {}
-  description = "Value block with a path to a binary file to run after helm renders the manifest which can alter the manifest contents"
-}
-
-variable "values" {
+variable "irsa_role_name_prefix" {
   type        = string
-  default     = ""
-  description = "Additional yaml encoded values which will be passed to the Helm chart"
+  default     = "vector-agent-log-irsa"
+  description = "The IRSA role name prefix for vector"
 }
 
-# Cloudwatch & Vector cloudwatch sink configuration
+variable "irsa_tags" {
+  type        = map(string)
+  default     = {}
+  description = "IRSA resources tags"
+}
+
+# ================ Cloudwatch & Vector cloudwatch sink configuration ================
+
 variable "cloudwatch_enabled" {
   type        = bool
   default     = false
@@ -215,7 +208,8 @@ variable "loki_label_cluster" {
   description = "Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events"
 }
 
-# Argo settings
+# ================ argo variables ================
+
 variable "argo_namespace" {
   type        = string
   default     = "argo"
@@ -234,10 +228,16 @@ variable "argo_helm_enabled" {
   description = "If set to true, the ArgoCD Application manifest will be deployed using Kubernetes provider as a Helm release. Otherwise it'll be deployed as a Kubernetes manifest. See Readme for more info"
 }
 
-variable "argo_helm_values" {
+variable "argo_helm_wait_timeout" {
   type        = string
-  default     = ""
-  description = "Value overrides to use when deploying argo application object with helm"
+  default     = "10m"
+  description = "Timeout for ArgoCD Application Helm release wait job"
+}
+
+variable "argo_helm_wait_backoff_limit" {
+  type        = number
+  default     = 6
+  description = "Backoff limit for ArgoCD Application Helm release wait job"
 }
 
 variable "argo_destination_server" {
@@ -292,9 +292,17 @@ variable "argo_spec" {
   description = "ArgoCD Application spec configuration. Override or create additional spec parameters"
 }
 
+variable "argo_helm_values" {
+  type        = string
+  default     = ""
+  description = "Value overrides to use when deploying argo application object with helm"
+}
+
+# ================ argo kubernetes manifest variables ================
+
 variable "argo_kubernetes_manifest_computed_fields" {
   type        = list(string)
-  default     = ["metadata.labels", "metadata.annotations"]
+  default     = ["metadata.labels", "metadata.annotations", "metadata.finalizers"]
   description = "List of paths of fields to be handled as \"computed\". The user-configured value for the field will be overridden by any different value returned by the API after apply."
 }
 
@@ -315,6 +323,8 @@ variable "argo_kubernetes_manifest_wait_fields" {
   default     = {}
   description = "A map of fields and a corresponding regular expression with a pattern to wait for. The provider will wait until the field matches the regular expression. Use * for any value."
 }
+
+# ================ helm release variables ================
 
 variable "helm_repo_key_file" {
   type        = string
@@ -470,4 +480,16 @@ variable "helm_lint" {
   type        = bool
   default     = false
   description = "Run the helm chart linter during the plan"
+}
+
+variable "helm_set_sensitive" {
+  type        = map(any)
+  default     = {}
+  description = "Value block with custom sensitive values to be merged with the values yaml that won't be exposed in the plan's diff"
+}
+
+variable "helm_postrender" {
+  type        = map(any)
+  default     = {}
+  description = "Value block with a path to a binary file to run after helm renders the manifest which can alter the manifest contents"
 }
