@@ -1,11 +1,11 @@
 resource "helm_release" "this" {
   count            = var.enabled && !var.argo_enabled ? 1 : 0
-  repository       = var.helm_repo_url
   chart            = var.helm_chart_name
-  version          = var.helm_chart_version
   create_namespace = var.helm_create_namespace
   namespace        = var.namespace
   name             = var.helm_release_name
+  version          = var.helm_chart_version
+  repository       = var.helm_repo_url
 
   repository_key_file        = var.helm_repo_key_file
   repository_cert_file       = var.helm_repo_cert_file

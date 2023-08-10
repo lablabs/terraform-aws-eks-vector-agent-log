@@ -17,8 +17,8 @@ The code in this example shows how to use the module with basic configuration an
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_eks_cluster"></a> [eks\_cluster](#module\_eks\_cluster) | cloudposse/eks-cluster/aws | 0.43.2 |
-| <a name="module_eks_node_group"></a> [eks\_node\_group](#module\_eks\_node\_group) | cloudposse/eks-node-group/aws | 0.25.0 |
+| <a name="module_eks_cluster"></a> [eks\_cluster](#module\_eks\_cluster) | cloudposse/eks-cluster/aws | 2.3.0 |
+| <a name="module_eks_node_group"></a> [eks\_node\_group](#module\_eks\_node\_group) | cloudposse/eks-node-group/aws | 2.4.0 |
 | <a name="module_vector_log_cloudwatch_argo_helm"></a> [vector\_log\_cloudwatch\_argo\_helm](#module\_vector\_log\_cloudwatch\_argo\_helm) | ../../ | n/a |
 | <a name="module_vector_log_cloudwatch_argo_manifests"></a> [vector\_log\_cloudwatch\_argo\_manifests](#module\_vector\_log\_cloudwatch\_argo\_manifests) | ../../ | n/a |
 | <a name="module_vector_log_cloudwatch_helm"></a> [vector\_log\_cloudwatch\_helm](#module\_vector\_log\_cloudwatch\_helm) | ../../ | n/a |

@@ -6,7 +6,7 @@ locals {
 
   values_default = yamlencode({
     "image" : {
-      "tag" : "0.22.2-debian"
+      "tag" : "0.31.0-debian"
     }
     "role" : "Agent"
     "service" : {
@@ -106,7 +106,7 @@ locals {
         "elasticsearch_kubernetes_containers" : {
           "type" : "elasticsearch",
           "inputs" : ["kubernetes_containers"],
-          "endpoint" : var.opensearch_endpoint,
+          "endpoints" : [var.opensearch_endpoint],
           "mode" : "data_stream",
           "bulk" : {
             "action" : "create"
@@ -124,7 +124,7 @@ locals {
         "elasticsearch_journal" : {
           "type" : "elasticsearch",
           "inputs" : ["journal"],
-          "endpoint" : var.opensearch_endpoint,
+          "endpoints" : [var.opensearch_endpoint],
           "mode" : "data_stream",
           "bulk" : {
             "action" : "create"
