@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_log_group" "cloudwatch_containers" {
+  #checkov:skip=CKV_AWS_338: By default, we want to retain cloudwatch logs for 14 days
   count = var.enabled && var.cloudwatch_enabled ? 1 : 0
 
   name              = "${var.cloudwatch_group_name_prefix}/containers"
@@ -9,6 +10,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_containers" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_nodes" {
+  #checkov:skip=CKV_AWS_338: By default, we want to retain cloudwatch logs for 14 days
   count = var.enabled && var.cloudwatch_enabled ? 1 : 0
 
   name              = "${var.cloudwatch_group_name_prefix}/nodes"
