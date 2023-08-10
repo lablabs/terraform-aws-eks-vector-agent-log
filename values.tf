@@ -184,6 +184,7 @@ locals {
           "type" : "loki"
           "inputs" : ["kubernetes_containers"]
           "endpoint" : var.loki_endpoint
+          "out_of_order_action" : "accept"
           "labels" : {
             "app" : "{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/name\" }}`}}"
             "container" : "{{`{{ kubernetes.container_name }}`}}"

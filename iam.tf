@@ -3,6 +3,7 @@ locals {
 }
 
 data "aws_iam_policy_document" "cloudwatch" {
+  #checkov:skip=CKV_AWS_356: Allow all kms actions for * resources here
   count = local.irsa_role_create && var.cloudwatch_enabled && !var.irsa_assume_role_enabled ? 1 : 0
 
   statement {
