@@ -193,7 +193,7 @@ locals {
             "cluster" : var.loki_label_cluster
             "log_source" : "containers"
             "namespace" : "{{`{{ kubernetes.pod_namespace }}`}}"
-            "node_name" : "{{`{{ kubernetes.pod_node_name }}`}}"
+            "node" : "{{`{{ kubernetes.pod_node_name }}`}}"
             "pod" : "{{`{{ kubernetes.pod_name }}`}}"
             "stream" : "{{`{{ .stream }}`}}"
           }
