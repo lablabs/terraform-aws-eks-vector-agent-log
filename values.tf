@@ -185,10 +185,11 @@ locals {
           "inputs" : ["kubernetes_containers"]
           "endpoint" : var.loki_endpoint
           "out_of_order_action" : "accept"
+          "remove_label_fields" : true
           "labels" : {
             "app" : "{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/name\" }}`}}"
             "container" : "{{`{{ kubernetes.container_name }}`}}"
-            "filename" : "{{`{{ file }}`}}"
+            "file" : "{{`{{ file }}`}}"
             "forwarder" : "vector"
             "cluster" : var.loki_label_cluster
             "log_source" : "containers"
@@ -205,6 +206,8 @@ locals {
           "type" : "loki"
           "inputs" : ["journal"]
           "endpoint" : var.loki_endpoint
+          "out_of_order_action" : "accept"
+          "remove_label_fields" : true
           "labels" : {
             "forwarder" : "vector"
             "cluster" : var.loki_label_cluster
