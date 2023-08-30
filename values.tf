@@ -189,7 +189,6 @@ locals {
           "labels" : {
             "app" : "{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/name\" }}`}}"
             "container" : "{{`{{ kubernetes.container_name }}`}}"
-            "file" : "{{`{{ file }}`}}"
             "forwarder" : "vector"
             "cluster" : var.loki_label_cluster
             "log_source" : "containers"
