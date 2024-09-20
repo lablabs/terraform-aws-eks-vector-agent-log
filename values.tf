@@ -160,6 +160,54 @@ locals {
     }
   })
 
+  helm_values_sink_loki_internal_logs = yamlencode({
+    "customConfig" : {
+      "transforms" : {
+        "filter_logs" : {
+          "type" : "filter",
+          "inputs" : ["internal_logs"],
+          "condition" : "(.metadata.level == \"WARN\") || (.metadata.level == \"ERROR\")"
+        }
+        "enrich_internal_logs" = {
+          "type" = "remap"
+          "inputs" = [
+            "filter_logs"
+          ]
+          "source" = <<-EOT
+            .kubernetes.pod_namespace = "$${VECTOR_SELF_POD_NAMESPACE:-null}"
+            .kubernetes.pod_node_name = "$${VECTOR_SELF_NODE_NAME:-null}"
+            .kubernetes.pod_name = "$${VECTOR_SELF_POD_NAME:-null}"
+          EOT
+        }
+      },
+      "sinks" : {
+        "loki_internal_logs" : {
+          "type" : "loki"
+          "inputs" : ["enrich_internal_logs"]
+          "endpoint" : var.loki_endpoint
+          "out_of_order_action" : "accept"
+          "remove_label_fields" : true
+          "labels" : {
+            "forwarder" : "vector"
+            "cluster" : var.loki_label_cluster
+            "log_source" : "internal_logs"
+            "namespace" : "{{`{{ kubernetes.pod_namespace }}`}}"
+            "node" : "{{`{{ kubernetes.pod_node_name }}`}}"
+            "pod" : "{{`{{ kubernetes.pod_name }}`}}"
+          }
+          "encoding" : {
+            "codec" : "json"
+          }
+        }
+      }
+      "sources" : {
+        "internal_logs" : {
+          "type": "internal_logs"
+        }
+      }
+    }
+  })
+
   helm_values_sink_opensearch_auth_strategy = yamlencode({
     "customConfig" : {
       "sinks" : {
@@ -231,6 +279,7 @@ data "utils_deep_merge_yaml" "values" {
     var.opensearch_enabled && var.irsa_role_create ? local.helm_values_sink_opensearch_auth_strategy : "",
     var.opensearch_enabled && var.irsa_assume_role_enabled ? local.helm_values_sink_opensearch_assume_role : "",
     var.loki_enabled ? local.helm_values_sink_loki : "",
+    var.loki_enabled && var.loki_internal_logs_enabled ? local.helm_values_sink_loki_internal_logs : "",
     var.values
   ])
 }
