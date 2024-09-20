@@ -194,6 +194,7 @@ locals {
             "namespace" : "{{`{{ kubernetes.pod_namespace }}`}}"
             "node" : "{{`{{ kubernetes.pod_node_name }}`}}"
             "pod" : "{{`{{ kubernetes.pod_name }}`}}"
+            "severity"  = "{{`{{ .metadata.level }}`}}"
           }
           "encoding" : {
             "codec" : "json"
