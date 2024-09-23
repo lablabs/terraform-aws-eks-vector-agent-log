@@ -194,7 +194,7 @@ locals {
             "namespace" : "{{`{{ kubernetes.pod_namespace }}`}}"
             "node" : "{{`{{ kubernetes.pod_node_name }}`}}"
             "pod" : "{{`{{ kubernetes.pod_name }}`}}"
-            "severity"  : "{{`{{ .metadata.level }}`}}"
+            "severity" : "{{`{{ .metadata.level }}`}}"
           }
           "encoding" : {
             "codec" : "json"
@@ -203,7 +203,7 @@ locals {
       }
       "sources" : {
         "internal_logs" : {
-          "type": "internal_logs"
+          "type" : "internal_logs"
         }
       }
     }
