@@ -214,6 +214,12 @@ variable "loki_internal_logs_enabled" {
   description = "Variable indicating whether Vector is scraping internal_logs"
 }
 
+variable "loki_internal_logs_filter_log_level" {
+  type        = string
+  default     = "warn"
+  description = "Variable defining log level to be filtered before logs are send to Loki endpoint"
+}
+
 # ================ argo variables ================
 
 variable "argo_namespace" {

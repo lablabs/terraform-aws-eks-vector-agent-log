@@ -165,8 +165,22 @@ locals {
       "transforms" : {
         "filter_logs" : {
           "type" : "filter",
-          "inputs" : ["internal_logs"],
-          "condition" : "(.metadata.level == \"WARN\") || (.metadata.level == \"ERROR\")"
+          "inputs" : ["internal_logs_severity_map"],
+          "condition" = "includes(array(.log_levels.${upper(var.loki_internal_logs_filter_log_level)}) ?? [], .metadata.level)"
+        },
+        "internal_logs_severity_map" = {
+          "type" = "remap"
+          "inputs" = [
+            "internal_logs"
+          ]
+          "source" = <<-EOT
+            .log_levels.TRACE  = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"]
+            .log_levels.DEBUG  = ["DEBUG", "INFO", "WARN", "ERROR", "FATAL"]
+            .log_levels.INFO   = ["INFO", "WARN", "ERROR", "FATAL"]
+            .log_levels.WARN   = ["WARN", "ERROR", "FATAL"]
+            .log_levels.ERROR  = ["ERROR", "FATAL"]
+            .log_levels.FATAL  = ["FATAL"]
+          EOT
         }
         "enrich_internal_logs" = {
           "type" = "remap"
@@ -177,6 +191,7 @@ locals {
             .kubernetes.pod_namespace = "$${VECTOR_SELF_POD_NAMESPACE:-null}"
             .kubernetes.pod_node_name = "$${VECTOR_SELF_NODE_NAME:-null}"
             .kubernetes.pod_name = "$${VECTOR_SELF_POD_NAME:-null}"
+            del(.log_levels)
           EOT
         }
       },
