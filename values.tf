@@ -163,12 +163,12 @@ locals {
   helm_values_sink_loki_internal_logs = yamlencode({
     "customConfig" : {
       "transforms" : {
-        "filter_logs" : {
+        "loki_internal_logs_severity_filter" : {
           "type" : "filter",
-          "inputs" : ["internal_logs_severity_map"],
-          "condition" = "includes(array(.log_levels.${upper(var.loki_internal_logs_filter_log_level)}) ?? [], .metadata.level)"
+          "inputs" : ["loki_internal_logs_severity_map"],
+          "condition" = "includes(array(.log_levels.${upper(var.loki_internal_logs_severity)}) ?? [], .metadata.level)"
         },
-        "internal_logs_severity_map" = {
+        "loki_internal_logs_severity_map" = {
           "type" = "remap"
           "inputs" = [
             "internal_logs"
@@ -182,10 +182,10 @@ locals {
             .log_levels.FATAL  = ["FATAL"]
           EOT
         }
-        "enrich_internal_logs" = {
+        "loki_internal_logs_enrichment" = {
           "type" = "remap"
           "inputs" = [
-            "filter_logs"
+            "loki_internal_logs_severity_filter"
           ]
           "source" = <<-EOT
             .kubernetes.pod_namespace = "$${VECTOR_SELF_POD_NAMESPACE:-null}"
@@ -198,7 +198,7 @@ locals {
       "sinks" : {
         "loki_internal_logs" : {
           "type" : "loki"
-          "inputs" : ["enrich_internal_logs"]
+          "inputs" : ["loki_internal_logs_enrichment"]
           "endpoint" : var.loki_endpoint
           "out_of_order_action" : "accept"
           "remove_label_fields" : true

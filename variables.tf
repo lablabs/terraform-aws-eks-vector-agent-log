@@ -211,13 +211,13 @@ variable "loki_label_cluster" {
 variable "loki_internal_logs_enabled" {
   type        = bool
   default     = false
-  description = "Variable indicating whether Vector is scraping internal_logs"
+  description = "Whether Vector internal logs should be sent to Loki"
 }
 
-variable "loki_internal_logs_filter_log_level" {
+variable "loki_internal_logs_severity" {
   type        = string
   default     = "warn"
-  description = "Variable defining log level to be filtered before logs are send to Loki endpoint"
+  description = "Internal log severity to be sent to Loki"
 }
 
 # ================ argo variables ================
