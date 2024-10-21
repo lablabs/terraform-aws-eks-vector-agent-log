@@ -164,7 +164,7 @@ No modules.
 | <a name="input_loki_enabled"></a> [loki\_enabled](#input\_loki\_enabled) | Variable indicating whether Loki is configured as Vector sink | `bool` | `false` | no |
 | <a name="input_loki_endpoint"></a> [loki\_endpoint](#input\_loki\_endpoint) | Domain-specific endpoint used to submit index and data upload requests | `string` | `"https://loki.example.com"` | no |
 | <a name="input_loki_internal_logs_enabled"></a> [loki\_internal\_logs\_enabled](#input\_loki\_internal\_logs\_enabled) | Whether Vector internal logs should be sent to Loki | `bool` | `false` | no |
-| <a name="input_loki_internal_logs_severity"></a> [loki\_internal\_logs\_severity](#input\_loki\_internal\_logs\_severity) | Internal log severity to be sent to Loki | `string` | `"warn"` | no |
+| <a name="input_loki_internal_logs_severity"></a> [loki\_internal\_logs\_severity](#input\_loki\_internal\_logs\_severity) | The severity of internal logs to be sent to Loki | `string` | `"warn"` | no |
 | <a name="input_loki_label_cluster"></a> [loki\_label\_cluster](#input\_loki\_label\_cluster) | Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events | `string` | `"example-cluster"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The K8s namespace in which the vector agent will be installed | `string` | `"kube-system"` | no |
 | <a name="input_opensearch_domain_arn"></a> [opensearch\_domain\_arn](#input\_opensearch\_domain\_arn) | List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains. | `list(string)` | <pre>[<br>  "*"<br>]</pre> | no |
