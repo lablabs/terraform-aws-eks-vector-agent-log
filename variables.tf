@@ -217,7 +217,7 @@ variable "loki_internal_logs_enabled" {
 variable "loki_internal_logs_severity" {
   type        = string
   default     = "warn"
-  description = "Internal log severity to be sent to Loki"
+  description = "The severity of internal logs to be sent to Loki"
 }
 
 # ================ argo variables ================
