@@ -208,6 +208,18 @@ variable "loki_label_cluster" {
   description = "Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events"
 }
 
+variable "loki_internal_logs_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether Vector internal logs should be sent to Loki"
+}
+
+variable "loki_internal_logs_severity" {
+  type        = string
+  default     = "warn"
+  description = "The severity of internal logs to be sent to Loki"
+}
+
 # ================ argo variables ================
 
 variable "argo_namespace" {
