@@ -1,119 +1,76 @@
-module "vector_log_cloudwatch_helm" {
+module "addon_installation_disabled" {
+  source = "../../"
+
+  enabled = false
+
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+}
+
+module "addon_installation_helm" {
   source = "../../"
 
   enabled           = true
   argo_enabled      = false
   argo_helm_enabled = false
 
-  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
+  cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
+
+  # Either CloudWatch, OpenSearch or Loki must be enabled
+  cloudwatch_enabled                     = false # set to true to enable CloudWatch logging
   cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
-  namespace                              = "logging"
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
 
-  argo_sync_policy = {
-    "automated" : {}
-    "syncOptions" = ["CreateNamespace=true"]
-  }
+  opensearch_enabled    = false # set to true to enable OpenSearch logging
+  opensearch_domain_arn = ["*"]
+  opensearch_endpoint   = "https://opensearch.example.com"
 
-  cloudwatch_enabled = true
+  loki_enabled       = false # set to true to enable Loki logging
+  loki_endpoint      = "https://loki.example.com"
+  loki_label_cluster = module.eks_cluster.eks_cluster_id
 
+  values = yamlencode({
+    # insert sample values here
+  })
 }
 
-module "vector_log_cloudwatch_argo_manifests" {
+# Please, see README.md and Argo Kubernetes deployment method for implications of using Kubernetes installation method
+module "addon_installation_argo_kubernetes" {
   source = "../../"
 
   enabled           = true
   argo_enabled      = true
   argo_helm_enabled = false
 
-  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
-  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
-  namespace                              = "logging"
-
-  argo_sync_policy = {
-    "automated" : {}
-    "syncOptions" = ["CreateNamespace=true"]
-  }
-
-  cloudwatch_enabled = true
-
-}
-
-module "vector_log_cloudwatch_argo_helm" {
-  source = "../../"
-
-  enabled           = true
-  argo_enabled      = true
-  argo_helm_enabled = true
-
-  cluster_identity_oidc_issuer           = module.eks_cluster.eks_cluster_identity_oidc_issuer
-  cluster_identity_oidc_issuer_arn       = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
-  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
-  namespace                              = "logging"
-
-  argo_sync_policy = {
-    "automated" : {}
-    "syncOptions" = ["CreateNamespace=true"]
-  }
-
-  cloudwatch_enabled = true
-
-}
-
-module "vector_log_opensearch" {
-  source = "../../"
-
-  #-------------------------------------------
-  # Argo instal using Helm chart:
-  #   argo_enabled      = true
-  #   argo_helm_enabled = true
-  #-------------------------------------------
-  # Argo instal using K8S manifests:
-  #   argo_enabled      = true
-  #   argo_helm_enabled = false
-  #-------------------------------------------
-  # Helm Install without Argo:
-  #   argo_enabled      = false
-  #   argo_helm_enabled = false
-  enabled           = true
-  argo_enabled      = true
-  argo_helm_enabled = true
-
   cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
   cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
-  namespace                        = "logging"
 
-  opensearch_domain_arn = ["arn:aws:es:eu-central-1:123456789012:domain/opensearch-cluster-arn"]
+  # Either CloudWatch, OpenSearch or Loki must be enabled
+  cloudwatch_enabled                     = false # set to true to enable CloudWatch logging
+  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+
+  opensearch_enabled    = false # set to true to enable OpenSearch logging
+  opensearch_domain_arn = ["*"]
+  opensearch_endpoint   = "https://opensearch.example.com"
+
+  loki_enabled  = false # set to true to enable Loki logging
+  loki_endpoint = "https://loki.example.com"
+
+  values = yamlencode({
+    # insert sample values here
+  })
 
   argo_sync_policy = {
-    "automated" : {}
-    "syncOptions" = ["CreateNamespace=true"]
+    automated   = {}
+    syncOptions = ["CreateNamespace=true"]
   }
-
-  opensearch_enabled  = true
-  opensearch_endpoint = "https://opensearch.organization.com"
-
 }
 
-module "vector_log_loki" {
+module "addon_installation_argo_helm" {
   source = "../../"
 
-  #-------------------------------------------
-  # Argo instal using Helm chart:
-  #   argo_enabled      = true
-  #   argo_helm_enabled = true
-  #-------------------------------------------
-  # Argo instal using K8S manifests:
-  #   argo_enabled      = true
-  #   argo_helm_enabled = false
-  #-------------------------------------------
-  # Helm Install without Argo:
-  #   argo_enabled      = false
-  #   argo_helm_enabled = false
   enabled           = true
   argo_enabled      = true
   argo_helm_enabled = true
@@ -121,15 +78,24 @@ module "vector_log_loki" {
   cluster_identity_oidc_issuer     = module.eks_cluster.eks_cluster_identity_oidc_issuer
   cluster_identity_oidc_issuer_arn = module.eks_cluster.eks_cluster_identity_oidc_issuer_arn
 
-  namespace = "logging"
+  # Either CloudWatch, OpenSearch or Loki must be enabled
+  cloudwatch_enabled                     = false # set to true to enable CloudWatch logging
+  cloudwatch_group_containers_kms_key_id = "1234abcd-12ab-34cd-56ef-1234567890ab"
+  cloudwatch_group_nodes_kms_key_id      = "1234abcd-12ab-34cd-56ef-1234567890ab"
+
+  opensearch_enabled    = false # set to true to enable OpenSearch logging
+  opensearch_domain_arn = ["*"]
+  opensearch_endpoint   = "https://opensearch.example.com"
+
+  loki_enabled  = false # set to true to enable Loki logging
+  loki_endpoint = "https://loki.example.com"
+
+  values = yamlencode({
+    # insert sample values here
+  })
 
   argo_sync_policy = {
-    "automated" : {}
-    "syncOptions" = ["CreateNamespace=true"]
+    automated   = {}
+    syncOptions = ["CreateNamespace=true"]
   }
-
-  loki_enabled       = true
-  loki_endpoint      = "https://gateway.liki.organization.com"
-  loki_label_cluster = "organization-prod-cluster"
-
 }
