@@ -1,10 +1,9 @@
 locals {
-  irsa_policy_enabled      = var.irsa_policy_enabled != null ? var.irsa_policy_enabled : (var.cloudwatch_enabled || var.opensearch_enabled) && coalesce(var.irsa_assume_role_enabled, false) == false
+  irsa_policy_enabled      = var.irsa_policy_enabled != null ? var.irsa_policy_enabled : (local.cloudwatch_enabled || local.opensearch_enabled) && coalesce(var.irsa_assume_role_enabled, false) == false
   irsa_assume_role_enabled = var.irsa_assume_role_enabled != null ? var.irsa_assume_role_enabled : false
 }
 
 data "aws_iam_policy_document" "cloudwatch" {
-  #checkov:skip=CKV_AWS_356: Allow all kms actions for * resources here
   count = local.cloudwatch_enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
 
   statement {
@@ -12,6 +11,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 
     actions = ["logs:DescribeLogGroups"]
 
+    #checkov:skip=CKV_AWS_356: Allow all kms actions for * resources here
     resources = ["*"]
   }
 
@@ -46,4 +46,13 @@ data "aws_iam_policy_document" "opensearch" {
 
     resources = var.opensearch_domain_arn
   }
+}
+
+data "aws_iam_policy_document" "vector" {
+  count = var.enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
+
+  source_policy_documents = compact([
+    one(data.aws_iam_policy_document.cloudwatch[*].json),
+    one(data.aws_iam_policy_document.opensearch[*].json)
+  ])
 }

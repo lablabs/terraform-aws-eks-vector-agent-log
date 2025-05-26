@@ -75,7 +75,7 @@ variable "cloudwatch_nodes_tags" {
 variable "opensearch_enabled" {
   type        = bool
   default     = false
-  description = "Variable indicating whether default Opensearch group with iam role is created and configured as Vector sink."
+  description = "Variable indicating whether default OpenSearch group with iam role is created and configured as Vector sink."
   nullable    = false
 }
 
