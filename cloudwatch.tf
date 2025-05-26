@@ -1,4 +1,6 @@
 locals {
+  cloudwatch_enabled = var.enabled && var.cloudwatch_enabled
+
   addon_values_cloudwatch = yamlencode({
     custom_config = {
       sinks = {
@@ -43,7 +45,7 @@ locals {
 
 resource "aws_cloudwatch_log_group" "cloudwatch_containers" {
   #checkov:skip=CKV_AWS_338: By default, we want to retain cloudwatch logs for 14 days
-  count = var.enabled && var.cloudwatch_enabled ? 1 : 0
+  count = local.cloudwatch_enabled ? 1 : 0
 
   name              = "${var.cloudwatch_group_name_prefix}/containers"
   retention_in_days = var.cloudwatch_group_containers_retention
@@ -54,7 +56,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_containers" {
 
 resource "aws_cloudwatch_log_group" "cloudwatch_nodes" {
   #checkov:skip=CKV_AWS_338: By default, we want to retain cloudwatch logs for 14 days
-  count = var.enabled && var.cloudwatch_enabled ? 1 : 0
+  count = local.cloudwatch_enabled ? 1 : 0
 
   name              = "${var.cloudwatch_group_name_prefix}/nodes"
   retention_in_days = var.cloudwatch_group_nodes_retention
