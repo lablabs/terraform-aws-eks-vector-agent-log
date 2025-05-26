@@ -31,12 +31,7 @@ locals {
   addon_values_cloudwatch_irsa = yamlencode({
     custom_config = {
       sinks = {
-        elasticsearch_kubernetes_containers = {
-          auth = {
-            assume_role = one(var.irsa_assume_role_arns)
-          }
-        }
-        elasticsearch_journal = {
+        aws_cloudwatch_logs = {
           auth = {
             assume_role = one(var.irsa_assume_role_arns)
           }
