@@ -5,7 +5,7 @@ locals {
 
 data "aws_iam_policy_document" "cloudwatch" {
   #checkov:skip=CKV_AWS_356: Allow all kms actions for * resources here
-  count = var.cloudwatch_enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
+  count = local.cloudwatch_enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
 
   statement {
     sid = "AllowDescribeCloudWatchLogsForVector"
@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "cloudwatch" {
 
 
 data "aws_iam_policy_document" "opensearch" {
-  count = var.opensearch_enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
+  count = local.opensearch_enabled && local.irsa_policy_enabled && var.irsa_policy == null ? 1 : 0
 
   statement {
     sid = "AllowOpenSearchLogsForVector"
