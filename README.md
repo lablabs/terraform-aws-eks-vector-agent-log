@@ -60,6 +60,7 @@ See [basic example](examples/basic) for further information.
 | [aws_cloudwatch_log_group.cloudwatch_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_iam_policy_document.cloudwatch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.opensearch](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.vector](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [utils_deep_merge_yaml.addon_values](https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml) | data source |
 | [utils_deep_merge_yaml.values](https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml) | data source |
@@ -161,7 +162,7 @@ See [basic example](examples/basic) for further information.
 | <a name="input_loki_label_cluster"></a> [loki\_label\_cluster](#input\_loki\_label\_cluster) | Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events. | `string` |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The Kubernetes Namespace in which the Helm chart will be installed (required). | `string` |
 | <a name="input_opensearch_domain_arn"></a> [opensearch\_domain\_arn](#input\_opensearch\_domain\_arn) | List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains. | `list(string)` |
-| <a name="input_opensearch_enabled"></a> [opensearch\_enabled](#input\_opensearch\_enabled) | Variable indicating whether default Opensearch group with iam role is created and configured as Vector sink. | `bool` |
+| <a name="input_opensearch_enabled"></a> [opensearch\_enabled](#input\_opensearch\_enabled) | Variable indicating whether default OpenSearch group with iam role is created and configured as Vector sink. | `bool` |
 | <a name="input_opensearch_endpoint"></a> [opensearch\_endpoint](#input\_opensearch\_endpoint) | Domain-specific endpoint used to submit index and data upload requests. | `string` |
 | <a name="input_pod_identity_additional_policies"></a> [pod\_identity\_additional\_policies](#input\_pod\_identity\_additional\_policies) | Map of the additional policies to be attached to pod identity role. Where key is arbitrary id and value is policy ARN. Defaults to `{}`. | `map(string)` |
 | <a name="input_pod_identity_permissions_boundary"></a> [pod\_identity\_permissions\_boundary](#input\_pod\_identity\_permissions\_boundary) | ARN of the policy that is used to set the permissions boundary for the pod identity role. Defaults to `null`. | `string` |

@@ -19,12 +19,7 @@ locals {
   addon_irsa = {
     (local.addon.name) = {
       irsa_policy_enabled = local.irsa_policy_enabled
-      irsa_policy = var.irsa_policy != null ? var.irsa_policy : one(
-        compact([ # either CloudWatch or OpenSearch policy can be used
-          one(data.aws_iam_policy_document.cloudwatch[*].json),
-          one(data.aws_iam_policy_document.opensearch[*].json),
-        ])
-      )
+      irsa_policy         = var.irsa_policy != null ? var.irsa_policy : try(data.aws_iam_policy_document.vector[0].json, null)
     }
   }
 
