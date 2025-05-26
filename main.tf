@@ -30,7 +30,7 @@ locals {
 
   addon_values_default = yamlencode({
     image = {
-      tag = "0.31.0-debian"
+      base = "debian"
     }
     role = "Agent"
     service = {
