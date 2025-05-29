@@ -14,6 +14,26 @@ moved {
 }
 
 moved {
+  from = kubernetes_job.helm_argo_application_wait
+  to   = module.addon.kubernetes_job.helm_argo_application_wait
+}
+
+moved {
+  from = kubernetes_role.helm_argo_application_wait
+  to   = module.addon.kubernetes_role.helm_argo_application_wait
+}
+
+moved {
+  from = kubernetes_role_binding.helm_argo_application_wait
+  to   = module.addon.kubernetes_role_binding.helm_argo_application_wait
+}
+
+moved {
+  from = kubernetes_service_account.helm_argo_application_wait
+  to   = module.addon.kubernetes_service_account.helm_argo_application_wait
+}
+
+moved {
   from = aws_iam_role.this
   to   = module.addon-irsa["vector"].aws_iam_role.this
 }

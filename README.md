@@ -4,7 +4,7 @@
 A Terraform module to deploy the [Vector](https://vector.dev/) agent on Amazon EKS cluster.
 
 [![Terraform validate](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/validate.yaml/badge.svg)](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/validate.yaml)
-[![pre-commit](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/pre-commit.yml)
+[![pre-commit](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/lablabs/terraform-aws-eks-vector-agent-log/actions/workflows/pre-commit.yaml)
 
 ---
 
