@@ -2,7 +2,7 @@ locals {
   cloudwatch_enabled = var.enabled && var.cloudwatch_enabled
 
   addon_values_cloudwatch = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         cloudwatch_kubernetes_containers = {
           type                 = "aws_cloudwatch_logs"
@@ -31,7 +31,7 @@ locals {
   })
 
   addon_values_cloudwatch_irsa = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         aws_cloudwatch_logs = {
           auth = {

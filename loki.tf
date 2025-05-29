@@ -1,6 +1,6 @@
 locals {
   addon_values_loki_internal_logs = yamlencode({
-    custom_config = {
+    customConfig = {
       transforms = {
         loki_internal_logs_severity_filter = {
           type      = "filter"
@@ -64,7 +64,7 @@ locals {
   })
 
   addon_values_loki = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         loki_kubernetes_containers = {
           type                = "loki"

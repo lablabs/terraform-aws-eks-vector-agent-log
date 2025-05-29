@@ -2,7 +2,7 @@ locals {
   opensearch_enabled = var.enabled && var.opensearch_enabled
 
   addon_values_opensearch = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         elasticsearch_kubernetes_containers = {
           type      = "elasticsearch"
@@ -45,7 +45,7 @@ locals {
   })
 
   addon_values_opensearch_irsa = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         elasticsearch_kubernetes_containers = {
           auth = {
@@ -62,7 +62,7 @@ locals {
   })
 
   addon_values_opensearch_auth_strategy = yamlencode({
-    custom_config = {
+    customConfig = {
       sinks = {
         elasticsearch_kubernetes_containers = {
           auth = {
