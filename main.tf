@@ -91,7 +91,7 @@ data "utils_deep_merge_yaml" "addon_values" {
     var.cloudwatch_enabled ? local.addon_values_cloudwatch : "",
     var.cloudwatch_enabled && local.irsa_assume_role_enabled ? local.addon_values_cloudwatch_irsa : "",
 
-    local.opensearch_create_sinks ? local.addon_values_opensearch : "",
+    var.opensearch_enabled && var.opensearch_create_default_sinks ? local.addon_values_opensearch : "",
     var.opensearch_enabled && module.addon-irsa[local.addon.name].irsa_role_enabled ? local.addon_values_opensearch_auth_strategy : "",
     var.opensearch_enabled && local.irsa_assume_role_enabled ? local.addon_values_opensearch_irsa : "",
 
