@@ -81,7 +81,7 @@ variable "opensearch_domain_arn" {
 
 variable "opensearch_endpoint" {
   type        = string
-  default     = "https://opensearch.example.com"
+  default     = ""
   description = "Domain-specific endpoint used to submit index and data upload requests."
   nullable    = false
 }
