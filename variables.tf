@@ -81,8 +81,15 @@ variable "opensearch_domain_arn" {
 
 variable "opensearch_endpoint" {
   type        = string
-  default     = ""
+  default     = "https://opensearch.example.com"
   description = "Domain-specific endpoint used to submit index and data upload requests."
+  nullable    = false
+}
+
+variable "opensearch_default_sink_enabled" {
+  type        = bool
+  default     = true
+  description = "Define if default sinks for kubernetes_pods and journald should be enabled."
   nullable    = false
 }
 
