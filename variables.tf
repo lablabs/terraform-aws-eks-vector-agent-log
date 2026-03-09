@@ -86,10 +86,10 @@ variable "opensearch_endpoint" {
   nullable    = false
 }
 
-variable "opensearch_default_sink_enabled" {
+variable "opensearch_default_sinks_enabled" {
   type        = bool
   default     = true
-  description = "Define if default sinks for kubernetes_pods and journald should be enabled."
+  description = "Define if default sinks for kubernetes_containers and journal should be enabled."
   nullable    = false
 }
 
