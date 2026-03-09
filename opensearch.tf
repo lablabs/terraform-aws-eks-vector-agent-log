@@ -1,5 +1,5 @@
 locals {
-  opensearch_enabled = var.enabled && var.opensearch_enabled
+  opensearch_enabled      = var.enabled && var.opensearch_enabled
   opensearch_create_sinks = local.opensearch_enabled && var.opensearch_endpoint != ""
 
   addon_values_opensearch = yamlencode({
