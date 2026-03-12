@@ -1,5 +1,6 @@
 locals {
-  opensearch_enabled = var.enabled && var.opensearch_enabled
+  opensearch_enabled               = var.enabled && var.opensearch_enabled
+  opensearch_default_sinks_enabled = local.opensearch_enabled && var.opensearch_default_sinks_enabled
 
   addon_values_opensearch = yamlencode({
     customConfig = {
