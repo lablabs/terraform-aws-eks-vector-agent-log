@@ -86,6 +86,13 @@ variable "opensearch_endpoint" {
   nullable    = false
 }
 
+variable "opensearch_default_sinks_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the default OpenSearch sinks for kubernetes_containers and journal should be enabled."
+  nullable    = false
+}
+
 # Vector Loki sink configuration
 variable "loki_enabled" {
   type        = bool

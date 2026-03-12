@@ -105,7 +105,7 @@ variable "argo_helm_wait_backoff_limit" {
 variable "argo_helm_wait_kubectl_version" {
   type        = string
   default     = null
-  description = "Version of kubectl to use for ArgoCD Application wait job. Defaults to `1.35.0`."
+  description = "Version of kubectl to use for ArgoCD Application wait job. Defaults to `1.33.3`."
 }
 
 variable "argo_source_type" {
@@ -261,7 +261,7 @@ variable "helm_package_verify" {
 variable "helm_keyring" {
   type        = string
   default     = null
-  description = "Location of public keys used for verification. Used only if `helm_package_verify` is `true`. Used only when `helm_package_verify` is `true`. Defaults to `~/.gnupg/pubring.gpg`."
+  description = "Location of public keys used for verification. Used only if `helm_package_verify` is `true`. Defaults to `~/.gnupg/pubring.gpg`."
 }
 
 variable "helm_timeout" {
@@ -379,10 +379,7 @@ variable "helm_set_sensitive" {
 }
 
 variable "helm_postrender" {
-  type = object({
-    binary_path = string
-    args        = optional(list(string))
-  })
+  type        = map(any)
   default     = null
-  description = "Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `null`."
+  description = "Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `{}`."
 }
