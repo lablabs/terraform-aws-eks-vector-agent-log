@@ -128,3 +128,10 @@ variable "loki_internal_logs_severity" {
   description = "The severity of internal logs to be sent to Loki."
   nullable    = false
 }
+
+variable "default_sources_enabled" {
+  type        = bool
+  default     = true
+  description = "Indicating whatever default sources for journald and kubernetes_logs should be created."
+  nullable    = false
+}
