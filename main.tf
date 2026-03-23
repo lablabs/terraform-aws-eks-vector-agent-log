@@ -62,14 +62,14 @@ locals {
       api = {
         enabled = false
       }
-      sources = {
+      sources = var.default_sources_enabled ? {
         journal = {
           type = "journald"
         }
         kubernetes_containers = {
           type = "kubernetes_logs"
         }
-      }
+      } : {}
     }
   })
 
