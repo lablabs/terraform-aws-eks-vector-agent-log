@@ -86,13 +86,6 @@ variable "opensearch_endpoint" {
   nullable    = false
 }
 
-variable "opensearch_default_sinks_enabled" {
-  type        = bool
-  default     = true
-  description = "Whether the default OpenSearch sinks for kubernetes_containers and journal should be enabled."
-  nullable    = false
-}
-
 # Vector Loki sink configuration
 variable "loki_enabled" {
   type        = bool
@@ -129,9 +122,30 @@ variable "loki_internal_logs_severity" {
   nullable    = false
 }
 
-variable "default_sources_enabled" {
+variable "source_journald_enabled" {
   type        = bool
   default     = true
-  description = "Indicating whatever default sources for journald and kubernetes_logs should be created."
+  description = "Indicating whatever Vector source for journald should be created."
+  nullable    = false
+}
+
+variable "source_kubernetes_logs_enabled" {
+  type        = bool
+  default     = true
+  description = "Indicating whatever Vector source for kubernetes_logs should be created."
+  nullable    = false
+}
+
+variable "opensearch_sink_journald_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the default OpenSearch sink for journald should be enabled."
+  nullable    = false
+}
+
+variable "opensearch_sink_kubernetes_logs_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the default OpenSearch sink for kubernetes_logs should be enabled."
   nullable    = false
 }
