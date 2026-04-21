@@ -48,7 +48,7 @@ See [basic example](examples/basic) for further information.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >=2.6 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 3 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.20 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 1 |
 
@@ -57,7 +57,7 @@ See [basic example](examples/basic) for further information.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_addon"></a> [addon](#module\_addon) | git::https://github.com/lablabs/terraform-aws-eks-universal-addon.git//modules/addon | v0.0.24 |
-| <a name="module_addon-irsa"></a> [addon-irsa](#module\_addon-irsa) | git::https://github.com/lablabs/terraform-aws-eks-universal-addon.git//modules/addon-irsa | v0.0.24 |
+| <a name="module_addon-irsa"></a> [addon-irsa](#module\_addon-irsa) | git::https://github.com/lablabs/terraform-aws-eks-universal-addon.git//modules/addon-irsa | v1.0.0-rc2 |
 ## Resources
 
 | Name | Type |
@@ -115,7 +115,6 @@ See [basic example](examples/basic) for further information.
 | <a name="input_cluster_identity_oidc_issuer"></a> [cluster\_identity\_oidc\_issuer](#input\_cluster\_identity\_oidc\_issuer) | The OIDC Identity issuer for the cluster (required for IRSA). Defaults to `""`. | `string` |
 | <a name="input_cluster_identity_oidc_issuer_arn"></a> [cluster\_identity\_oidc\_issuer\_arn](#input\_cluster\_identity\_oidc\_issuer\_arn) | The OIDC Identity issuer ARN for the cluster that can be used to associate IAM roles with a Service Account (required for IRSA). Defaults to `""`. | `string` |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster (required for Pod Identity). Defaults to `""`. | `string` |
-| <a name="input_default_sources_enabled"></a> [default\_sources\_enabled](#input\_default\_sources\_enabled) | Indicating whatever default sources for journald and kubernetes\_logs should be created. | `bool` |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources. | `bool` |
 | <a name="input_helm_atomic"></a> [helm\_atomic](#input\_helm\_atomic) | If set, installation process purges chart on fail. The wait flag will be set automatically if atomic is used. Defaults to `false`. | `bool` |
 | <a name="input_helm_chart_name"></a> [helm\_chart\_name](#input\_helm\_chart\_name) | Helm chart name to be installed. Required if `argo_source_type` is set to `helm`. Defaults to `""`. | `string` |
@@ -170,10 +169,11 @@ See [basic example](examples/basic) for further information.
 | <a name="input_loki_internal_logs_severity"></a> [loki\_internal\_logs\_severity](#input\_loki\_internal\_logs\_severity) | The severity of internal logs to be sent to Loki. | `string` |
 | <a name="input_loki_label_cluster"></a> [loki\_label\_cluster](#input\_loki\_label\_cluster) | Cluster label with kubernetes cluster name as a value. Labels are attached to each batch of events. | `string` |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The Kubernetes Namespace in which the Helm chart will be installed (required). | `string` |
-| <a name="input_opensearch_default_sinks_enabled"></a> [opensearch\_default\_sinks\_enabled](#input\_opensearch\_default\_sinks\_enabled) | Whether the default OpenSearch sinks for kubernetes\_containers and journal should be enabled. | `bool` |
 | <a name="input_opensearch_domain_arn"></a> [opensearch\_domain\_arn](#input\_opensearch\_domain\_arn) | List of OpenSearch arns to allow for the vector role. Default all OpenSearch domains. | `list(string)` |
 | <a name="input_opensearch_enabled"></a> [opensearch\_enabled](#input\_opensearch\_enabled) | Variable indicating whether default OpenSearch group with iam role is created and configured as Vector sink. | `bool` |
 | <a name="input_opensearch_endpoint"></a> [opensearch\_endpoint](#input\_opensearch\_endpoint) | Domain-specific endpoint used to submit index and data upload requests. | `string` |
+| <a name="input_opensearch_sink_journald_enabled"></a> [opensearch\_sink\_journald\_enabled](#input\_opensearch\_sink\_journald\_enabled) | Whether the default OpenSearch sink for journald should be enabled. | `bool` |
+| <a name="input_opensearch_sink_kubernetes_logs_enabled"></a> [opensearch\_sink\_kubernetes\_logs\_enabled](#input\_opensearch\_sink\_kubernetes\_logs\_enabled) | Whether the default OpenSearch sink for kubernetes\_logs should be enabled. | `bool` |
 | <a name="input_pod_identity_additional_policies"></a> [pod\_identity\_additional\_policies](#input\_pod\_identity\_additional\_policies) | Map of the additional policies to be attached to Pod Identity role. Where key is arbitrary id and value is policy ARN. Defaults to `{}`. | `map(string)` |
 | <a name="input_pod_identity_permissions_boundary"></a> [pod\_identity\_permissions\_boundary](#input\_pod\_identity\_permissions\_boundary) | ARN of the policy that is used to set the permissions boundary for the Pod Identity role. Defaults to `null`. | `string` |
 | <a name="input_pod_identity_policy"></a> [pod\_identity\_policy](#input\_pod\_identity\_policy) | AWS IAM policy JSON document to be attached to the Pod Identity role. Applied only if `pod_identity_policy_enabled` is `true`. Defaults to `""`. | `string` |
@@ -188,6 +188,8 @@ See [basic example](examples/basic) for further information.
 | <a name="input_service_account_name"></a> [service\_account\_name](#input\_service\_account\_name) | The Kubernetes Service Account name. Defaults to `""`. | `string` |
 | <a name="input_service_account_namespace"></a> [service\_account\_namespace](#input\_service\_account\_namespace) | The Kubernetes Service Account namespace. Defaults to `""`. | `string` |
 | <a name="input_settings"></a> [settings](#input\_settings) | Additional Helm sets which will be passed to the Helm chart values or Kustomize or directory configuration which will be passed to ArgoCD Application source. Defaults to `{}`. | `map(any)` |
+| <a name="input_source_journald_enabled"></a> [source\_journald\_enabled](#input\_source\_journald\_enabled) | Indicating whatever Vector source for journald should be created. | `bool` |
+| <a name="input_source_kubernetes_logs_enabled"></a> [source\_kubernetes\_logs\_enabled](#input\_source\_kubernetes\_logs\_enabled) | Indicating whatever Vector source for kubernetes\_logs should be created. | `bool` |
 | <a name="input_values"></a> [values](#input\_values) | Additional YAML encoded values which will be passed to the Helm chart. Defaults to `""`. | `string` |
 ## Outputs
 
