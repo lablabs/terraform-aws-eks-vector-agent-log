@@ -379,10 +379,7 @@ variable "helm_set_sensitive" {
 }
 
 variable "helm_postrender" {
-  type = object({
-    binary_path = string
-    args        = optional(list(string))
-  })
+  type        = map(any)
   default     = null
   description = "Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `null`."
 }
