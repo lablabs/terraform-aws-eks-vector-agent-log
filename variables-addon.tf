@@ -105,7 +105,7 @@ variable "argo_helm_wait_backoff_limit" {
 variable "argo_helm_wait_kubectl_version" {
   type        = string
   default     = null
-  description = "Version of kubectl to use for ArgoCD Application wait job. Defaults to `1.33.3`."
+  description = "Version of kubectl to use for ArgoCD Application wait job. Defaults to `1.35.0`."
 }
 
 variable "argo_source_type" {
@@ -379,7 +379,10 @@ variable "helm_set_sensitive" {
 }
 
 variable "helm_postrender" {
-  type        = map(any)
+  type = object({
+    binary_path = string
+    args        = optional(list(string))
+  })
   default     = null
-  description = "Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `{}`."
+  description = "Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `null`."
 }
