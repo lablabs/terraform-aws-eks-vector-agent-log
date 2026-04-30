@@ -7,7 +7,7 @@ locals {
         cloudwatch_kubernetes_containers = {
           type                 = "aws_cloudwatch_logs"
           inputs               = ["kubernetes_containers"]
-          region               = one(data.aws_region.current[*].name)
+          region               = one(data.aws_region.current[*].id)
           group_name           = one(aws_cloudwatch_log_group.cloudwatch_containers[*].name)
           stream_name          = "{{`{{ kubernetes.pod_namespace }}-{{ kubernetes.pod_name }}-{{ kubernetes.container_name }}`}}"
           create_missing_group = false
@@ -18,7 +18,7 @@ locals {
         cloudwatch_journal = {
           type                 = "aws_cloudwatch_logs"
           inputs               = ["journal"]
-          region               = one(data.aws_region.current[*].name)
+          region               = one(data.aws_region.current[*].id)
           group_name           = one(aws_cloudwatch_log_group.cloudwatch_nodes[*].name)
           stream_name          = "{{`{{ host }}`}}"
           create_missing_group = false
