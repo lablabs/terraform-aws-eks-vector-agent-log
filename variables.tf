@@ -121,3 +121,31 @@ variable "loki_internal_logs_severity" {
   description = "The severity of internal logs to be sent to Loki."
   nullable    = false
 }
+
+variable "source_journald_enabled" {
+  type        = bool
+  default     = true
+  description = "Indicating whatever Vector source for journald should be created."
+  nullable    = false
+}
+
+variable "source_kubernetes_logs_enabled" {
+  type        = bool
+  default     = true
+  description = "Indicating whatever Vector source for kubernetes_logs should be created."
+  nullable    = false
+}
+
+variable "opensearch_sink_journald_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the default OpenSearch sink for journald should be enabled."
+  nullable    = false
+}
+
+variable "opensearch_sink_kubernetes_logs_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the default OpenSearch sink for kubernetes_logs should be enabled."
+  nullable    = false
+}
