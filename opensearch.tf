@@ -19,7 +19,7 @@ locals {
           }
           compression = "gzip"
           aws = {
-            region = one(data.aws_region.current[*].id)
+            region = one(data.aws_region.current[*].region)
           }
         }
         elasticsearch_journal = {
@@ -37,7 +37,7 @@ locals {
           }
           compression = "gzip"
           aws = {
-            region = one(data.aws_region.current[*].id)
+            region = one(data.aws_region.current[*].region)
           }
         }
       }
