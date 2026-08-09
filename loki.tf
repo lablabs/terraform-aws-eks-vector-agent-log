@@ -82,6 +82,13 @@ locals {
             node       = "{{`{{ kubernetes.pod_node_name }}`}}"
             pod        = "{{`{{ kubernetes.pod_name }}`}}"
             stream     = "{{`{{ .stream }}`}}"
+
+            # OTEL standard labels
+            service_namespace = "{{`{{ kubernetes.pod_namespace }}`}}"
+            service_name      = "{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/instance\" }}`}}-{{`{{ kubernetes.pod_labels.\"app.kubernetes.io/component\" }}`}}"
+            # deployment_environment_name = module.label.environment # TODO discuss
+            k8s_pod_name = "{{`{{ kubernetes.pod_name }}`}}"
+            k8s_container_name = "{{`{{ kubernetes.container_name }}`}}"
           }
           encoding = {
             codec = "json"
