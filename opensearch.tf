@@ -21,7 +21,7 @@ locals {
             }
             compression = "gzip"
             aws = {
-              region = one(data.aws_region.current[*].name)
+              region = one(data.aws_region.current[*].id)
             }
           }
         } : {},
@@ -41,7 +41,7 @@ locals {
             }
             compression = "gzip"
             aws = {
-              region = one(data.aws_region.current[*].name)
+              region = one(data.aws_region.current[*].id)
             }
           }
         } : {}
