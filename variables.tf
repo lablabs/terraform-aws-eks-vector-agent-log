@@ -139,13 +139,13 @@ variable "source_kubernetes_logs_enabled" {
 variable "opensearch_sink_journald_enabled" {
   type        = bool
   default     = true
-  description = "Whether the default OpenSearch sink for journald should be enabled."
+  description = "Whether the default OpenSearch sink for journald should be enabled. If `source_journald_enabled` is `false`, ensure a source named `journal` is created or already exists."
   nullable    = false
 }
 
 variable "opensearch_sink_kubernetes_logs_enabled" {
   type        = bool
   default     = true
-  description = "Whether the default OpenSearch sink for kubernetes_logs should be enabled."
+  description = "Whether the default OpenSearch sink for kubernetes_logs should be enabled. If `source_kubernetes_logs_enabled` is `false`, ensure a source named `kubernetes_containers` is created or already exists."
   nullable    = false
 }
