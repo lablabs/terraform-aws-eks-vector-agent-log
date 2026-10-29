@@ -48,7 +48,7 @@ See [basic example](examples/basic) for further information.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.8 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5 |
-| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.6 |
+| <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 3 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.20 |
 | <a name="requirement_utils"></a> [utils](#requirement\_utils) | >= 1 |
 
@@ -128,11 +128,7 @@ See [basic example](examples/basic) for further information.
 | <a name="input_helm_disable_webhooks"></a> [helm\_disable\_webhooks](#input\_helm\_disable\_webhooks) | Prevent Helm chart hooks from running. Defaults to `false`. | `bool` |
 | <a name="input_helm_enabled"></a> [helm\_enabled](#input\_helm\_enabled) | Set to false to prevent installation of the module via Helm release. Defaults to `true`. | `bool` |
 | <a name="input_helm_force_update"></a> [helm\_force\_update](#input\_helm\_force\_update) | Force Helm resource update through delete/recreate if needed. Defaults to `false`. | `bool` |
-<<<<<<< HEAD
 | <a name="input_helm_keyring"></a> [helm\_keyring](#input\_helm\_keyring) | Location of public keys used for verification. Used only when `helm_package_verify` is `true`. Defaults to `~/.gnupg/pubring.gpg`. | `string` |
-=======
-| <a name="input_helm_keyring"></a> [helm\_keyring](#input\_helm\_keyring) | Location of public keys used for verification. Used only if `helm_package_verify` is `true`. Used only when `helm_package_verify` is `true`. Defaults to `~/.gnupg/pubring.gpg`. | `string` |
->>>>>>> b674ef2 (feat(vector-opensearch): fix variables)
 | <a name="input_helm_lint"></a> [helm\_lint](#input\_helm\_lint) | Run the Helm chart linter during the plan. Defaults to `false`. | `bool` |
 | <a name="input_helm_package_verify"></a> [helm\_package\_verify](#input\_helm\_package\_verify) | Verify the package before installing it. Helm uses a provenance file to verify the integrity of the chart; this must be hosted alongside the chart. Defaults to `false`. | `bool` |
 | <a name="input_helm_postrender"></a> [helm\_postrender](#input\_helm\_postrender) | Value block with a path to a binary file to run after Helm renders the manifest which can alter the manifest contents. Defaults to `null`. | `map(any)` |
