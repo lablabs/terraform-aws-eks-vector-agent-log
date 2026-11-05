@@ -73,19 +73,7 @@ locals {
     }
   })
 
-  addon_values = one(data.utils_deep_merge_yaml.addon_values[*].output)
-
-  addon_depends_on = []
-}
-
-data "aws_region" "current" {
-  count = var.enabled ? 1 : 0
-}
-
-data "utils_deep_merge_yaml" "addon_values" {
-  count = var.enabled ? 1 : 0
-
-  input = compact([
+  addon_values = var.enabled ? provider::lara-utils::yaml_deep_merge(compact([
     local.addon_values_default,
 
     var.cloudwatch_enabled ? local.addon_values_cloudwatch : "",
@@ -97,5 +85,11 @@ data "utils_deep_merge_yaml" "addon_values" {
 
     var.loki_enabled ? local.addon_values_loki : "",
     var.loki_enabled && var.loki_internal_logs_enabled ? local.addon_values_loki_internal_logs : "",
-  ])
+  ])) : null
+
+  addon_depends_on = []
+}
+
+data "aws_region" "current" {
+  count = var.enabled ? 1 : 0
 }
