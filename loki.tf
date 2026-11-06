@@ -27,9 +27,9 @@ locals {
             "loki_internal_logs_severity_filter"
           ]
           source = <<-EOT
-            .kubernetes.pod_namespace = "$${VECTOR_SELF_POD_NAMESPACE:-null}"
-            .kubernetes.pod_node_name = "$${VECTOR_SELF_NODE_NAME:-null}"
-            .kubernetes.pod_name = "$${VECTOR_SELF_POD_NAME:-null}"
+            .kubernetes.pod_namespace = get_env_var("VECTOR_SELF_POD_NAMESPACE") ?? "null"
+            .kubernetes.pod_node_name = get_env_var("VECTOR_SELF_NODE_NAME") ?? "null"
+            .kubernetes.pod_name = get_env_var("VECTOR_SELF_POD_NAME") ?? "null"
             del(.log_levels)
           EOT
         }
