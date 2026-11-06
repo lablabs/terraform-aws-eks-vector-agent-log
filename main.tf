@@ -12,7 +12,7 @@ locals {
     namespace = "kube-system"
 
     helm_chart_name    = "vector"
-    helm_chart_version = "0.40.0" # 0.44.0
+    helm_chart_version = "0.60.0" # 0.60.0
     helm_repo_url      = "https://helm.vector.dev"
   }
 
